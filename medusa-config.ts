@@ -5,20 +5,6 @@ loadEnv(process.env.NODE_ENV || "development", process.cwd());
 module.exports = defineConfig({
   modules: [
     {
-      resolve: "@medusajs/medusa/payment",
-      options: {
-        providers: [
-          {
-            resolve: "@medusajs/medusa/payment-stripe",
-            id: "stripe",
-            options: {
-              apiKey: process.env.STRIPE_API_KEY,
-            },
-          },
-        ],
-      },
-    },
-    {
       resolve: "@medusajs/medusa/fulfillment",
       options: {
         providers: [
@@ -32,6 +18,20 @@ module.exports = defineConfig({
             id: "shipstation",
             options: {
               api_key: process.env.SHIPSTATION_API_KEY,
+            },
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "@medusajs/medusa/payment-stripe",
+            id: "stripe",
+            options: {
+              apiKey: process.env.STRIPE_API_KEY,
             },
           },
         ],
@@ -71,3 +71,19 @@ module.exports = defineConfig({
     },
   },
 });
+
+// {
+//   resolve: "./src/modules/sanity",
+//   options: {
+//     api_token: process.env.SANITY_API_TOKEN,
+
+//     project_id: process.env.SANITY_PROJECT_ID,
+//     api_version: new Date().toISOString().split("T")[0],
+//     dataset: "production",
+//     studio_url:
+//       process.env.SANITY_STUDIO_URL || "http://localhost:3000/studio",
+//     type_map: {
+//       product: "product",
+//     },
+//   },
+// },

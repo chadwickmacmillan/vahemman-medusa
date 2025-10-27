@@ -30,11 +30,14 @@
     "@mikro-orm/knex": "6.4.3",
     "@mikro-orm/migrations": "6.4.3",
     "@mikro-orm/postgresql": "6.4.3",
+    "@react-email/components": "^0.5.7",
+    "@sanity/client": "^7.12.0",
     "awilix": "^8.0.1",
     "medusa-fulfillment-shippo": "^1.1.2",
     "medusa-variant-images": "^1.1.4",
     "pg": "^8.13.0",
-    "resend": "^6.2.0"
+    "resend": "^6.2.0",
+    "sanity": "^4.10.3"
   },
   "devDependencies": {
     "@medusajs/test-utils": "2.10.3",
