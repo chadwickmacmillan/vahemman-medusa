@@ -21,22 +21,17 @@ export class ShipStationClient {
   private async sendRequest(url: string, data?: RequestInit): Promise<any> {
     return fetch(`https://api.shipstation.com/v2${url}`, {
       ...data,
-
       headers: {
         ...data?.headers,
-
         "api-key": this.options.api_key,
-
         "Content-Type": "application/json",
       },
     })
       .then((resp) => {
         const contentType = resp.headers.get("content-type");
-
         if (!contentType?.includes("application/json")) {
           return resp.text();
         }
-
         return resp.json();
       })
 
@@ -44,13 +39,11 @@ export class ShipStationClient {
         if (typeof resp !== "string" && resp.errors?.length) {
           throw new MedusaError(
             MedusaError.Types.INVALID_DATA,
-
             `An error occured while sending a request to ShipStation: ${resp.errors.map(
               (error) => error.message
             )}`
           );
         }
-
         return resp;
       });
   }
@@ -64,19 +57,16 @@ export class ShipStationClient {
   ): Promise<GetShippingRatesResponse> {
     return await this.sendRequest("/rates", {
       method: "POST",
-
       body: JSON.stringify(data),
     }).then((resp) => {
       if (resp.rate_response.errors?.length) {
         throw new MedusaError(
           MedusaError.Types.INVALID_DATA,
-
           `An error occured while retrieving rates from ShipStation: ${resp.rate_response.errors.map(
             (error) => error.message
           )}`
         );
       }
-
       return resp;
     });
   }
