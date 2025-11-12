@@ -12952,13 +12952,6 @@ media-typer@0.3.0:
   resolved "https://registry.yarnpkg.com/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
   integrity sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ==
 
-medusa-variant-images@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/medusa-variant-images/-/medusa-variant-images-1.1.4.tgz#443b002e9db3245c4f74d97e4bd27bb79a9f38a4"
-  integrity sha512-ZFheIG9QhpCbEtotayHu+FkleLZmnndsQqerWuPp4RdDbfMwtinj1I60Kngo4ChCRMYm31rrdg0gLweKcxePGw==
-  dependencies:
-    lodash-es "^4.17.21"
-
 mendoza@^3.0.8:
   version "3.0.8"
   resolved "https://registry.yarnpkg.com/mendoza/-/mendoza-3.0.8.tgz#3b5a050d1fad1d9972cfc42fb57fbcafa0476399"
