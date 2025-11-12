@@ -102,6 +102,7 @@ class SanityModuleService {
     }
     return await this.createSyncDocument(type, data);
   }
+
   async createSyncDocument<T extends SyncDocumentTypes>(
     type: T,
     data: SyncDocumentInputs<T>,
@@ -111,6 +112,7 @@ class SanityModuleService {
 
     return await this.client.create(doc, options);
   }
+
   async updateSyncDocument<T extends SyncDocumentTypes>(
     type: T,
     data: SyncDocumentInputs<T>
@@ -118,6 +120,7 @@ class SanityModuleService {
     const operations = this.updateTransformationMap[type](data);
     return await this.client.patch(data.id, operations).commit();
   }
+
   async retrieve(id: string) {
     return this.client.getDocument(id);
   }
@@ -142,6 +145,18 @@ class SanityModuleService {
       id: doc?._id,
       ...doc,
     }));
+  }
+
+  async getStudioLink(
+    type: string,
+    id: string,
+    config: { explicit_type?: boolean } = {}
+  ) {
+    const resolvedType = config.explicit_type ? type : this.typeMap[type];
+    if (!this.studioUrl) {
+      throw new Error("No studio URL provided");
+    }
+    return `${this.studioUrl}/structure/${resolvedType};${id}`;
   }
 }
 
