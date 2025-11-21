@@ -48,7 +48,6 @@ export const sendOrderConfirmationWorkflow = createWorkflow(
       fields: [
         "*",
         "variants.*",
-        "variants.calculated_price.*",
         "variants.inventory_quantity",
         "variants.images.*",
         "variants.options.*",
