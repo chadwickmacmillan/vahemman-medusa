@@ -12,45 +12,49 @@ const OrderItems = ({
   currencyCode: string;
   products: ProductDTO[];
 }) => {
-  <>
-    {items.map((item) => {
-      const product = products.find(
-        (product) => product.id === item.product_id
-      );
-      const variant = product?.variants.find(
-        (variant) => variant.id === item.variant_id
-      );
-      return (
-        <>
-          <Section key={item.id} className="border-b border-gray-200 py-4">
-            <Row>
-              <Column className="w-1/3">
-                <Img
-                  src={variant?.thumbnail ?? ""}
-                  alt={product?.title ?? ""}
-                  width="100%"
-                />
-              </Column>
-              <Column className="w-2/3 pl-4">
-                <Text className="text-lg font-semibold text-gray-800">
-                  {product?.title}
-                </Text>
-                {variant?.options.map((option) => (
-                  <Text className="text-gray-600">
-                    {option.option?.title}: {option.value}
+  return (
+    <>
+      {items.map((item) => {
+        const product = products.find(
+          (product) => product.id === item.product_id
+        );
+        const variant = product?.variants.find(
+          (variant) => variant.id === item.variant_id
+        );
+        return (
+          <>
+            <Section key={item.id} className="border-b border-gray-200 py-4">
+              <Row>
+                <Column className="w-1/3">
+                  <Img
+                    src={variant?.thumbnail ?? ""}
+                    alt={product?.title ?? ""}
+                    width="100%"
+                  />
+                </Column>
+                <Column className="w-2/3 pl-4">
+                  <Text className="text-lg font-semibold text-gray-800">
+                    {product?.title}
                   </Text>
-                ))}
-                <Text className="text-gray-600 m-2">{item.variant_title}</Text>
-                <Text className="text-gray-800 mt-2 font-bold">
-                  {formatPrice(item.total, currencyCode)}
-                </Text>
-              </Column>
-            </Row>
-          </Section>
-        </>
-      );
-    })}
-  </>;
+                  {variant?.options.map((option) => (
+                    <Text className="text-gray-600">
+                      {option.option?.title}: {option.value}
+                    </Text>
+                  ))}
+                  <Text className="text-gray-600 m-2">
+                    {item.variant_title}
+                  </Text>
+                  <Text className="text-gray-800 mt-2 font-bold">
+                    {formatPrice(item.total, currencyCode)}
+                  </Text>
+                </Column>
+              </Row>
+            </Section>
+          </>
+        );
+      })}
+    </>
+  );
 };
 
 export default OrderItems;
