@@ -18,11 +18,11 @@ export const sendShipmentCreatedWorkflow = createWorkflow(
       entity: "fulfillment",
       fields: [
         "id",
-        "items*",
-        "labels*",
+        "items.*",
+        "labels.*",
         "shipped_at",
-        "*order",
-        "*order.customer.*",
+        "order.*",
+        "order.customer.*",
       ],
       filters: {
         id,
@@ -35,27 +35,19 @@ export const sendShipmentCreatedWorkflow = createWorkflow(
     const { data: products } = useQueryGraphStep({
       entity: "product",
       fields: [
-        "*variants",
-        "*variants.calculated_price",
-        "+variants.inventory_quantity",
-        "*variants.images",
-        "*variants.options",
-        "*variants.options.option",
+        "*",
+        "variants.*",
+        "variants.calculated_price.*",
+        "variants.inventory_quantity",
+        "variants.images.*",
+        "variants.options.*",
+        "variants.options.option.*",
       ],
-      options: {
-        throwIfKeyNotFound: true,
-      },
     }).config({ name: "fetch-products" });
-
-    console.log(no_notification, fulfillments, products);
 
     const notification = when(
       { no_notification, fulfillments, products },
-      (data) =>
-        !data.no_notification &&
-        !!data.fulfillments[0] &&
-        !!data.fulfillments[0]?.order?.email &&
-        !!data.products
+      (data) => !data.no_notification && !!data.fulfillments[0]?.order?.email
     ).then(() => {
       return sendNotificationStep([
         {

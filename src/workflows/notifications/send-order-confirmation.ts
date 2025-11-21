@@ -46,21 +46,19 @@ export const sendOrderConfirmationWorkflow = createWorkflow(
     const { data: products } = useQueryGraphStep({
       entity: "product",
       fields: [
-        "*variants",
-        "*variants.calculated_price",
-        "+variants.inventory_quantity",
-        "*variants.images",
-        "*variants.options",
-        "*variants.options.option",
+        "*",
+        "variants.*",
+        "variants.calculated_price.*",
+        "variants.inventory_quantity",
+        "variants.images.*",
+        "variants.options.*",
+        "variants.options.option.*",
       ],
-      options: {
-        throwIfKeyNotFound: true,
-      },
     }).config({ name: "fetch-products" });
 
     const notification = when(
-      { orders, products },
-      (data) => !!data.orders[0].email && !!data.products
+      { orders },
+      (data) => !!data.orders[0].email
     ).then(() => {
       return sendNotificationStep([
         {
