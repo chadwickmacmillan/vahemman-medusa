@@ -1,7 +1,6 @@
 import { Column, Img, Row, Section, Text } from "@react-email/components";
 import { ProductDTO, type OrderLineItemDTO } from "@medusajs/framework/types";
 import formatPrice from "../utils/formatPrice";
-import { useMemo } from "react";
 
 const OrderItems = ({
   items,

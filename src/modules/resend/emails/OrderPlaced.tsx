@@ -1,24 +1,13 @@
 import {
   Text,
-  Column,
   Container,
   Heading,
   Html,
-  Img,
-  Row,
-  Section,
   Tailwind,
   Head,
   Preview,
-  Body,
-  Link,
 } from "@react-email/components";
-import {
-  BigNumberValue,
-  CustomerDTO,
-  OrderDTO,
-  ProductDTO,
-} from "@medusajs/framework/types";
+import { CustomerDTO, OrderDTO, ProductDTO } from "@medusajs/framework/types";
 import OrderSummary from "./components/OrderSummary";
 import EmailHeader from "./components/EmailHeader";
 import EmailFooter from "./components/EmailFooter";

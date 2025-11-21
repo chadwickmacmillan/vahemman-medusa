@@ -1,6 +1,10 @@
 import { Column, Heading, Row, Section, Text } from "@react-email/components";
 
-import { OrderLineItemDTO, BigNumberValue } from "@medusajs/framework/types";
+import {
+  OrderLineItemDTO,
+  BigNumberValue,
+  ProductDTO,
+} from "@medusajs/framework/types";
 import formatPrice from "../utils/formatPrice";
 import OrderItems from "./OrderItems";
 
@@ -11,6 +15,7 @@ const ItemsInShipment = ({
   taxTotal,
   total,
   shippingTotal,
+  products,
 }: {
   items?: OrderLineItemDTO[] | null;
   currencyCode: string;
@@ -18,13 +23,20 @@ const ItemsInShipment = ({
   shippingTotal?: BigNumberValue;
   taxTotal?: BigNumberValue;
   total?: BigNumberValue;
+  products: ProductDTO[];
 }) => {
   return (
     <Section className="mt-8">
       <Heading className="text-xl font-semibold text-gray-800 mb-4">
         Items in shipment
       </Heading>
-      {items && <OrderItems items={items} currencyCode={currencyCode} />}
+      {items && (
+        <OrderItems
+          items={items}
+          currencyCode={currencyCode}
+          products={products}
+        />
+      )}
       {subtotal && (
         <Row className="text-gray-600">
           <Column className="w-1/2">

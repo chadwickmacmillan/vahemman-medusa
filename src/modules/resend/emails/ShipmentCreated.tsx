@@ -4,13 +4,10 @@ import {
   Container,
   Heading,
   Html,
-  Img,
   Row,
-  Section,
   Tailwind,
   Head,
   Preview,
-  Body,
   Link,
 } from "@react-email/components";
 import {
@@ -19,12 +16,13 @@ import {
   FulfillmentDTO,
   OrderDTO,
   OrderLineItemDTO,
+  ProductDTO,
 } from "@medusajs/framework/types";
 import { useMemo } from "react";
 import EmailHeader from "./components/EmailHeader";
-import OrderSummary from "./components/OrderSummary";
 import EmailFooter from "./components/EmailFooter";
 import EmailBody from "./components/EmailBody";
+import ItemsInShipment from "./components/ItemsInShipment";
 
 type ShipmentCreatedEmailProps = {
   fulfillment: FulfillmentDTO & {
@@ -32,6 +30,7 @@ type ShipmentCreatedEmailProps = {
       customer: CustomerDTO;
     };
   };
+  products: ProductDTO[];
   email_banner?: {
     body: string;
     title: string;
@@ -41,23 +40,9 @@ type ShipmentCreatedEmailProps = {
 
 function ShipmentCreatedEmailComponent({
   fulfillment,
+  products,
+  email_banner,
 }: ShipmentCreatedEmailProps) {
-  const formatter = new Intl.NumberFormat([], {
-    style: "currency",
-    currencyDisplay: "narrowSymbol",
-    currency: fulfillment.order.currency_code,
-  });
-
-  const formatPrice = (price: BigNumberValue) => {
-    if (typeof price === "number") {
-      return formatter.format(price);
-    }
-    if (typeof price === "string") {
-      return formatter.format(parseFloat(price));
-    }
-    return price?.toString() || "";
-  };
-
   // get order line items
 
   const fulfillmentOrderLineItemIds = useMemo(
@@ -175,8 +160,8 @@ function ShipmentCreatedEmailComponent({
 
           {/* Order Items */}
           <Container className="px-6">
-            <OrderSummary
-              title="Items in shipment"
+            <ItemsInShipment
+              products={products}
               currencyCode={fulfillment.order.currency_code}
               items={orderItems}
               shippingTotal={fulfillment.order.shipping_methods?.reduce(

@@ -1,24 +1,15 @@
-import {
-  Column,
-  Container,
-  Heading,
-  Img,
-  Row,
-  Section,
-  Text,
-} from "@react-email/components";
+import { Column, Heading, Row, Section, Text } from "@react-email/components";
 
 import {
   OrderLineItemDTO,
   BigNumberValue,
-  OrderShippingMethodDTO,
   ProductDTO,
 } from "@medusajs/framework/types";
 import formatPrice from "../utils/formatPrice";
 import OrderItems from "./OrderItems";
 
 const OrderSummary = ({
-  products
+  products,
   items,
   currencyCode,
   subtotal,
@@ -26,7 +17,7 @@ const OrderSummary = ({
   total,
   shippingTotal,
 }: {
-  products: ProductDTO[],
+  products: ProductDTO[];
   items?: OrderLineItemDTO[] | null;
   currencyCode: string;
   subtotal?: BigNumberValue;
@@ -39,7 +30,13 @@ const OrderSummary = ({
       <Heading className="text-xl font-semibold text-gray-800 mb-4">
         Order Summary
       </Heading>
-      {items && <OrderItems items={items} currencyCode={currencyCode} products={products}/>}
+      {items && (
+        <OrderItems
+          items={items}
+          currencyCode={currencyCode}
+          products={products}
+        />
+      )}
       {subtotal && (
         <Row className="text-gray-600">
           <Column className="w-1/2">
