@@ -1,7 +1,7 @@
 import type { SubscriberArgs, SubscriberConfig } from "@medusajs/framework";
 import { sendShipmentCreatedWorkflow } from "../workflows/notifications/send-shipment-created";
 
-export default async function orderShipmetn({
+export default async function shipmentCreatedHandler({
   event: { data },
   container,
 }: SubscriberArgs<{ id: string; no_notification: boolean }>) {

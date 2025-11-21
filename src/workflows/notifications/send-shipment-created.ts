@@ -16,7 +16,14 @@ export const sendShipmentCreatedWorkflow = createWorkflow(
   ({ id, no_notification }: WorkflowInput) => {
     const { data: fulfillments } = useQueryGraphStep({
       entity: "fulfillment",
-      fields: ["id", "items*", "labels*", "shipped_at", "*order.customer.*"],
+      fields: [
+        "id",
+        "items*",
+        "labels*",
+        "shipped_at",
+        "*order",
+        "*order.customer.*",
+      ],
       filters: {
         id,
       },
@@ -40,12 +47,15 @@ export const sendShipmentCreatedWorkflow = createWorkflow(
       },
     }).config({ name: "fetch-products" });
 
+    console.log(no_notification, fulfillments, products);
+
     const notification = when(
-      { fulfillments },
+      { no_notification, fulfillments, products },
       (data) =>
-        !no_notification &&
+        !data.no_notification &&
         !!data.fulfillments[0] &&
-        !!data.fulfillments[0]?.order?.email
+        !!data.fulfillments[0]?.order?.email &&
+        !!data.products
     ).then(() => {
       return sendNotificationStep([
         {

@@ -49,6 +49,9 @@ function OrderPlacedEmailComponent({
             <Text className="text-center text-gray-600 mt-2">
               We're processing your order and will notify you when it ships.
             </Text>
+            <Text className="text-center text-gray-600 mt-2">
+              Order #{order.display_id + 1000}
+            </Text>
           </Container>
 
           {/* Order Items */}

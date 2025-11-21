@@ -59,8 +59,8 @@ export const sendOrderConfirmationWorkflow = createWorkflow(
     }).config({ name: "fetch-products" });
 
     const notification = when(
-      { orders },
-      (data) => !!data.orders[0].email
+      { orders, products },
+      (data) => !!data.orders[0].email && !!data.products
     ).then(() => {
       return sendNotificationStep([
         {

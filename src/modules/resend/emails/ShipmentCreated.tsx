@@ -82,14 +82,17 @@ function ShipmentCreatedEmailComponent({
 
           {/* Thank You Message */}
           <Container className="p-6">
-            <Heading className="text-2xl font-bold text-center text-gray-800">
+            <Text className="text-center text-gray-600 mt-2">
+              Order #{fulfillment.order.display_id + 1000}
+            </Text>
+            <Text className="text-center text-gray-600 mt-2">
               Dear{" "}
               {fulfillment.order.customer?.first_name ||
                 fulfillment.order.shipping_address?.first_name}{" "}
               {fulfillment.order.customer?.last_name ||
                 fulfillment.order.shipping_address?.last_name}
               ,
-            </Heading>
+            </Text>
             <Text className="text-center text-gray-600 mt-2">
               {isEveryItemInFulfillment ? "Your" : "Part of your"} order has now
               shipped. Your package is being delivered by FedEx and is schedule
@@ -103,57 +106,49 @@ function ShipmentCreatedEmailComponent({
           {/* Tracking information */}
           <Container className="px-6">
             <Row>
-              <Column>
+              <Text className="text-sm m-0 text-gray-500">
+                Estimated Delivery Date
+              </Text>
+              <Text className="text-sm m-0 my-2 text-gray-500">
+                {fulfillment.shipped_at?.toLocaleDateString()}
+              </Text>
+            </Row>
+            <Row>
+              <Text className="text-sm m-0 text-gray-500">
+                Shipping Address
+              </Text>
+              <address>
                 <Text className="text-sm m-0 my-2 text-gray-500">
-                  Estimated Delivery Date
+                  {fulfillment.order.shipping_address?.first_name +
+                    " " +
+                    fulfillment.order.shipping_address?.last_name}
                 </Text>
-                <Text className="text-sm m-0 my-2 text-gray-500">
-                  {fulfillment.shipped_at?.toLocaleDateString()}
+                <br />
+                <Text className="text-sm m-0 my-1 text-gray-500">
+                  {fulfillment.order.shipping_address?.address_1}
                 </Text>
-              </Column>
+                <br />
+                <Text className="text-sm m-0 my-1 text-gray-500">
+                  {fulfillment.order.shipping_address?.address_2}
+                </Text>
+                <br />
+                <Text className="text-sm m-0 my-1 text-gray-500">
+                  {fulfillment.order.shipping_address?.city},{" "}
+                  {fulfillment.order.shipping_address?.province}{" "}
+                  {fulfillment.order.shipping_address?.postal_code}
+                </Text>
+              </address>
+            </Row>
+            <Row>
+              <Text className="text-sm m-0 text-gray-500">Shipped by</Text>
+              <Text className="text-sm m-0 my-2 text-gray-500">FedEx</Text>
             </Row>
             <Row>
               <Column>
+                <Text className="text-sm m-0 text-gray-500">Tracking #</Text>
                 <Text className="text-sm m-0 my-2 text-gray-500">
-                  Shipping Address
+                  {fulfillment.labels[0].tracking_number}
                 </Text>
-                <address>
-                  <Text className="text-sm m-0 my-2 text-gray-500">
-                    {fulfillment.order.shipping_address?.first_name +
-                      " " +
-                      fulfillment.order.shipping_address?.last_name}
-                  </Text>
-                  <br />
-                  <Text className="text-sm m-0 my-2 text-gray-500">
-                    {fulfillment.order.shipping_address?.address_1}
-                  </Text>
-                  <br />
-                  <Text className="text-sm m-0 my-2 text-gray-500">
-                    {fulfillment.order.shipping_address?.address_2}
-                  </Text>
-                  <br />
-                  <Text className="text-sm m-0 my-2 text-gray-500">
-                    {fulfillment.order.shipping_address?.city},{" "}
-                    {fulfillment.order.shipping_address?.province}{" "}
-                    {fulfillment.order.shipping_address?.postal_code}
-                  </Text>
-                </address>
-              </Column>
-            </Row>
-            <Row>
-              <Column>
-                <Text className="text-sm m-0 my-2 text-gray-500">
-                  Shipped by
-                </Text>
-                <Text className="text-sm m-0 my-2 text-gray-500">FedEx</Text>
-              </Column>
-            </Row>
-            <Row>
-              <Column>
-                <Text className="text-sm m-0 my-2 text-gray-500">
-                  Tracking #
-                </Text>
-                <Text className="text-sm m-0 my-2 text-gray-500">FedEx</Text>
               </Column>
             </Row>
           </Container>

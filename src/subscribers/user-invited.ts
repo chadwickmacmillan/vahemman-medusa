@@ -28,7 +28,6 @@ export default async function inviteCreatedHandler({
 
   await notificationModuleService.createNotifications({
     to: invite.email,
-    // TODO replace with template ID in notification provider
     template: "user-invited",
     channel: "email",
     data: {

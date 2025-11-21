@@ -64,6 +64,7 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
   }
 
   static validateOptions(options: Record<any, any>) {
+    console.log("HI");
     if (!options.api_key) {
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
