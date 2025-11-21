@@ -38,7 +38,7 @@ export const sendShipmentCreatedWorkflow = createWorkflow(
       options: {
         throwIfKeyNotFound: true,
       },
-    });
+    }).config({ name: "fetch-products" });
 
     const notification = when(
       { fulfillments },
