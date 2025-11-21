@@ -1,6 +1,6 @@
 import type { SubscriberArgs, SubscriberConfig } from "@medusajs/medusa";
 
-import { sanitySyncProductsWorkflow } from "../workflows/sanity-sync-products";
+import { sanitySyncProductsWorkflow } from "../workflows/sanity";
 
 export default async function upsertSanityProduct({
   event: { data },

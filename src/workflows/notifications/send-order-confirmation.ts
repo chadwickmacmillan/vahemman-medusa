@@ -43,6 +43,21 @@ export const sendOrderConfirmationWorkflow = createWorkflow(
       },
     });
 
+    const { data: products } = useQueryGraphStep({
+      entity: "product",
+      fields: [
+        "*variants",
+        "*variants.calculated_price",
+        "+variants.inventory_quantity",
+        "*variants.images",
+        "*variants.options",
+        "*variants.options.option",
+      ],
+      options: {
+        throwIfKeyNotFound: true,
+      },
+    });
+
     const notification = when(
       { orders },
       (data) => !!data.orders[0].email
@@ -54,6 +69,7 @@ export const sendOrderConfirmationWorkflow = createWorkflow(
           template: "order-placed",
           data: {
             order: orders[0],
+            products: products,
           },
         },
       ]);

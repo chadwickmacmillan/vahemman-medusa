@@ -1,6 +1,6 @@
 import type { SubscriberArgs, SubscriberConfig } from "@medusajs/framework";
 
-import { sendOrderConfirmationWorkflow } from "../workflows/send-order-confirmation/send-order-confirmation";
+import { sendOrderConfirmationWorkflow } from "../workflows/notifications/send-order-confirmation";
 
 export default async function orderPlacedHandler({
   event: { data },

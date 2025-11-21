@@ -82,7 +82,6 @@ export class ShipStationClient {
   async purchaseLabelForShipment(id: string): Promise<Label> {
     return await this.sendRequest(`/labels/shipment/${id}`, {
       method: "POST",
-
       body: JSON.stringify({}),
     });
   }

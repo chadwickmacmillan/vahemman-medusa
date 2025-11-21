@@ -12,6 +12,7 @@ import {
   FulfillmentOption,
   OrderLineItemDTO,
   StockLocationAddressDTO,
+  ValidateFulfillmentDataContext,
 } from "@medusajs/framework/types";
 import type {
   GetShippingRatesResponse,
@@ -166,9 +167,7 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
 
   async calculatePrice(
     optionData: CalculateShippingOptionPriceDTO["optionData"],
-
     data: CalculateShippingOptionPriceDTO["data"],
-
     context: CalculateShippingOptionPriceDTO["context"]
   ): Promise<CalculatedShippingOptionPrice> {
     const { shipment_id } =
@@ -221,7 +220,7 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
   async validateFulfillmentData(
     optionData: Record<string, unknown>,
     data: Record<string, unknown>,
-    context: Record<string, unknown>
+    context: ValidateFulfillmentDataContext
   ): Promise<any> {
     let { shipment_id } = data as {
       shipment_id?: string;
@@ -333,7 +332,6 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
       items: orderItemsToFulfill as OrderLineItemDTO[],
 
       // @ts-ignore
-
       currency_code: order.currency_code,
     });
 
@@ -353,7 +351,6 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
   async cancelFulfillment(data: Record<string, unknown>): Promise<any> {
     const { label_id, shipment_id } = data as {
       label_id: string;
-
       shipment_id: string;
     };
 

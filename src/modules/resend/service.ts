@@ -11,6 +11,9 @@ import {
 
 import { CreateEmailOptions, Resend } from "resend";
 import { orderPlacedEmail } from "./emails/OrderPlaced";
+import { shipmentCreatedEmail } from "./emails/ShipmentCreated";
+import { passwordResetEmail } from "./emails/PasswordReset";
+import { userInvitedEmail } from "./emails/UserInvited";
 
 type InjectedDependencies = {
   logger: Logger;
@@ -18,14 +21,11 @@ type InjectedDependencies = {
 
 type ResendOptions = {
   api_key: string;
-
   from: string;
-
   html_templates?: Record<
     string,
     {
       subject?: string;
-
       content: string;
     }
   >;
@@ -33,20 +33,23 @@ type ResendOptions = {
 
 enum Templates {
   ORDER_PLACED = "order-placed",
+  SHIPMENT_CREATED = "shipment-created",
+  PASSWORD_RESET = "password-reset",
+  USER_INVITED = "user-invited",
 }
 
 const templates: { [key in Templates]?: (props: unknown) => React.ReactNode } =
   {
     [Templates.ORDER_PLACED]: orderPlacedEmail,
+    [Templates.SHIPMENT_CREATED]: shipmentCreatedEmail,
+    [Templates.PASSWORD_RESET]: passwordResetEmail,
+    [Templates.USER_INVITED]: userInvitedEmail,
   };
 
 class ResendNotificationProviderService extends AbstractNotificationProviderService {
   static identifier = "notification-resend";
-
   private resendClient: Resend;
-
   private options: ResendOptions;
-
   private logger: Logger;
 
   constructor(
@@ -55,11 +58,8 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
     options: ResendOptions
   ) {
     super();
-
     this.resendClient = new Resend(options.api_key);
-
     this.options = options;
-
     this.logger = logger;
   }
 
@@ -67,7 +67,6 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
     if (!options.api_key) {
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
-
         "Option `api_key` is required in the provider's options."
       );
     }
@@ -75,7 +74,6 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
     if (!options.from) {
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
-
         "Option `from` is required in the provider's options."
       );
     }
@@ -103,7 +101,12 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
     switch (template) {
       case Templates.ORDER_PLACED:
         return "Order Confirmation";
-
+      case Templates.SHIPMENT_CREATED:
+        return "Your order has been shipped";
+      case Templates.PASSWORD_RESET:
+        return "Reset Your Password";
+      case Templates.USER_INVITED:
+        return "You've been invited to join Vahemman workspace";
       default:
         return "New Email";
     }
@@ -126,9 +129,7 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
 
     const commonOptions = {
       from: this.options.from,
-
       to: [notification.to],
-
       subject: this.getTemplateSubject(notification.template as Templates),
     };
 
@@ -137,13 +138,11 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
     if (typeof template === "string") {
       emailOptions = {
         ...commonOptions,
-
         html: template,
       };
     } else {
       emailOptions = {
         ...commonOptions,
-
         react: template(notification.data),
       };
     }

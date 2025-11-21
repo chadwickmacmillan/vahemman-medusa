@@ -1,6 +1,6 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework";
 import { Modules } from "@medusajs/framework/utils";
-import { sanitySyncProductsWorkflow } from "../../../../workflows/sanity-sync-products";
+import { sanitySyncProductsWorkflow } from "../../../../workflows/sanity";
 
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   const workflowEngine = req.scope.resolve(Modules.WORKFLOW_ENGINE);
