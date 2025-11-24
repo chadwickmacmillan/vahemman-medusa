@@ -86,7 +86,7 @@ function ShipmentCreatedEmailComponent({
 
           {/* Thank You Message */}
           <Container className="p-6">
-            <Text className="text-gray-600 mt-2">
+            <Text className="text-gray-600">
               Order #{fulfillment.order.display_id + 1000}
             </Text>
             <Text className="text-gray-600 mt-2">
