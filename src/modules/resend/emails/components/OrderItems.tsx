@@ -35,14 +35,13 @@ const OrderItems = ({
                   <Text className="text-lg font-semibold text-gray-800">
                     {product?.title}
                   </Text>
-                  {variant?.options.map((option) => (
-                    <Text className="text-gray-600">
+                  {variant?.options.map((option, i) => (
+                    <Text
+                      className={`text-gray-600 ${i === 0 ? "mt-4" : "mt-2"}`}
+                    >
                       {option.option?.title}: {option.value}
                     </Text>
                   ))}
-                  <Text className="text-gray-600 m-2">
-                    {item.variant_title}
-                  </Text>
                   <Text className="text-gray-800 mt-2 font-bold">
                     {formatPrice(item.total, currencyCode)}
                   </Text>
