@@ -69,6 +69,10 @@ function ShipmentCreatedEmailComponent({
     [fulfillment, fulfillmentOrderLineItemIds]
   );
 
+  const shipDate = fulfillment.shipped_at
+    ? new Date(fulfillment.shipped_at)
+    : null;
+
   return (
     <Tailwind>
       <Html className="font-sans bg-gray-100">
@@ -93,11 +97,13 @@ function ShipmentCreatedEmailComponent({
                 fulfillment.order.shipping_address?.last_name}
               ,
             </Text>
-            <Text className="text-center text-gray-600 mt-2">
-              {isEveryItemInFulfillment ? "Your" : "Part of your"} order has now
-              shipped. Your package is being delivered by FedEx and is schedule
-              to be delivered {fulfillment.shipped_at?.toDateString()}
-            </Text>
+            {shipDate && (
+              <Text className="text-center text-gray-600 mt-2">
+                {isEveryItemInFulfillment ? "Your" : "Part of your"} order has
+                now shipped. Your package is being delivered by FedEx and is
+                schedule to be delivered {shipDate.toLocaleDateString()}
+              </Text>
+            )}
             <Link href={fulfillment.labels[0].tracking_url}>
               Track my package
             </Link>
@@ -109,9 +115,11 @@ function ShipmentCreatedEmailComponent({
               <Text className="text-sm m-0 text-gray-500">
                 Estimated Delivery Date
               </Text>
-              <Text className="text-sm m-0 my-2 text-gray-500">
-                {fulfillment.shipped_at?.toDateString()}
-              </Text>
+              {shipDate && (
+                <Text className="text-sm m-0 my-2 text-gray-500">
+                  {shipDate.toLocaleDateString()}
+                </Text>
+              )}
             </Row>
             <Row>
               <Text className="text-sm m-0 text-gray-500">
