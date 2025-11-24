@@ -19,11 +19,11 @@ export const sendShipmentCreatedWorkflow = createWorkflow(
       fields: [
         "*,",
         "id",
-        "*.items.*",
-        "*.labels.*",
-        "*.order",
-        "*.order.*",
-        "*.order.customer.*",
+        "items.*",
+        "labels.*",
+        "order",
+        "order.*",
+        "order.customer.*",
         "shipped_at",
       ],
       filters: {
