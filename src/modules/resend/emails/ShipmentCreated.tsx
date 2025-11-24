@@ -96,7 +96,7 @@ function ShipmentCreatedEmailComponent({
             <Text className="text-center text-gray-600 mt-2">
               {isEveryItemInFulfillment ? "Your" : "Part of your"} order has now
               shipped. Your package is being delivered by FedEx and is schedule
-              to be delivered {fulfillment.shipped_at?.toLocaleDateString()}
+              to be delivered {fulfillment.shipped_at?.toDateString()}
             </Text>
             <Link href={fulfillment.labels[0].tracking_url}>
               Track my package
@@ -110,7 +110,7 @@ function ShipmentCreatedEmailComponent({
                 Estimated Delivery Date
               </Text>
               <Text className="text-sm m-0 my-2 text-gray-500">
-                {fulfillment.shipped_at?.toLocaleDateString()}
+                {fulfillment.shipped_at?.toDateString()}
               </Text>
             </Row>
             <Row>
