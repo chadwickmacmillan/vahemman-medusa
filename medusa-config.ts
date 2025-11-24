@@ -61,14 +61,14 @@ module.exports = defineConfig({
       resolve: "@medusajs/medusa/notification",
       options: {
         providers: [
-          // {
-          //   resolve: "@medusajs/medusa/notification-local",
-          //   id: "local",
-          //   options: {
-          //     name: "Local Notification Provider",
-          //     channels: ["feed"],
-          //   },
-          // },
+          {
+            resolve: "@medusajs/medusa/notification-local",
+            id: "local",
+            options: {
+              name: "Local Notification Provider",
+              channels: ["feed"],
+            },
+          },
           {
             resolve: "./src/modules/resend",
             id: "resend",
