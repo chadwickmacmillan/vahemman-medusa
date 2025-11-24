@@ -86,10 +86,10 @@ function ShipmentCreatedEmailComponent({
 
           {/* Thank You Message */}
           <Container className="p-6">
-            <Text className="text-center text-gray-600 mt-2">
+            <Text className="text-gray-600 mt-2">
               Order #{fulfillment.order.display_id + 1000}
             </Text>
-            <Text className="text-center text-gray-600 mt-2">
+            <Text className="text-gray-600 mt-2">
               Dear{" "}
               {fulfillment.order.customer?.first_name ||
                 fulfillment.order.shipping_address?.first_name}{" "}
@@ -104,7 +104,10 @@ function ShipmentCreatedEmailComponent({
                 schedule to be delivered {shipDate.toLocaleDateString()}
               </Text>
             )}
-            <Link href={fulfillment.labels[0].tracking_url}>
+            <Link
+              href={fulfillment.labels[0].tracking_url}
+              className="text-center mt-4"
+            >
               Track my package
             </Link>
           </Container>
@@ -121,7 +124,7 @@ function ShipmentCreatedEmailComponent({
                 </Text>
               )}
             </Row>
-            <Row>
+            <Row className="py-4">
               <Text className="text-sm m-0 text-gray-500">
                 Shipping Address
               </Text>
@@ -147,13 +150,15 @@ function ShipmentCreatedEmailComponent({
                 </Text>
               </address>
             </Row>
-            <Row>
+            <Row className="py-4">
               <Text className="text-sm m-0 text-gray-500">Shipped by</Text>
               <Text className="text-sm m-0 my-2 text-gray-500">FedEx</Text>
             </Row>
-            <Row>
+            <Row className="py-4">
               <Column>
-                <Text className="text-sm m-0 text-gray-500">Tracking #</Text>
+                <Text className="text-sm m-0 text-gray-500">
+                  Tracking Number
+                </Text>
                 <Text className="text-sm m-0 my-2 text-gray-500">
                   {fulfillment.labels[0].tracking_number}
                 </Text>

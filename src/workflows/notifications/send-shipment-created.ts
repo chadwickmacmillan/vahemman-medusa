@@ -17,12 +17,14 @@ export const sendShipmentCreatedWorkflow = createWorkflow(
     const { data: fulfillments } = useQueryGraphStep({
       entity: "fulfillment",
       fields: [
+        "*,",
         "id",
-        "items.*",
-        "labels.*",
+        "*.items.*",
+        "*.labels.*",
+        "*.order",
+        "*.order.*",
+        "*.order.customer.*",
         "shipped_at",
-        "order.*",
-        "order.customer.*",
       ],
       filters: {
         id,
