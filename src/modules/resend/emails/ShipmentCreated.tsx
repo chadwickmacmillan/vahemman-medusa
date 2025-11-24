@@ -104,12 +104,14 @@ function ShipmentCreatedEmailComponent({
                 schedule to be delivered {shipDate.toLocaleDateString()}
               </Text>
             )}
-            <Link
-              href={fulfillment.labels[0].tracking_url}
-              className="text-center mt-4"
-            >
-              Track my package
-            </Link>
+            {fulfillment.labels?.[0]?.tracking_url && (
+              <Link
+                href={fulfillment.labels[0].tracking_url}
+                className="text-center mt-4"
+              >
+                Track my package
+              </Link>
+            )}
           </Container>
 
           {/* Tracking information */}
