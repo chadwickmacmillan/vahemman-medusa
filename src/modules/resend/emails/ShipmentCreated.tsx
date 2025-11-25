@@ -53,7 +53,6 @@ function ShipmentCreatedEmailComponent({
   const orderItems = useMemo(
     () =>
       fulfillment.order.items?.reduce((acc, current) => {
-        console.log(current, fulfillmentOrderLineItemIds);
         if (fulfillmentOrderLineItemIds.includes(current.id)) {
           acc.push(current);
         }
@@ -96,7 +95,7 @@ function ShipmentCreatedEmailComponent({
             </Text>
             <Text className="text-gray-600 mt-2">
               {isEveryItemInFulfillment ? "Your" : "Part of your"} order has now
-              shipped. Your package is being delivered by FedEx
+              shipped. Your package is being delivered by FedEx.
             </Text>
             {fulfillment.labels?.[0]?.tracking_url && (
               <Link href={fulfillment.labels[0].tracking_url} className="mt-4">

@@ -22,6 +22,7 @@ export const sendShipmentCreatedWorkflow = createWorkflow(
         "labels.*",
         "order",
         "order.*",
+        "order.items.*",
         "order.customer.*",
         "shipped_at",
       ],

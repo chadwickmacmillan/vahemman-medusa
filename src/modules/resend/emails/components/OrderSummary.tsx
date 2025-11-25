@@ -37,7 +37,7 @@ const OrderSummary = ({
           products={products}
         />
       )}
-      <Row className="text-gray-600">
+      <Row className="text-gray-600 mt-4">
         <Column className="w-1/2">
           <Text className="m-0">Subtotal</Text>
         </Column>
