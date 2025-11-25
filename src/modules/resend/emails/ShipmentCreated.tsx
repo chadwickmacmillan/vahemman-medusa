@@ -126,46 +126,50 @@ function ShipmentCreatedEmailComponent({
                 </Text>
               )}
             </Row>
-            <Row className="py-4">
-              <Text className="text-sm m-0 text-gray-500">
-                Shipping Address
-              </Text>
-              <address>
-                <Text className="text-sm m-0 my-2 text-gray-500">
-                  {fulfillment.order.shipping_address?.first_name +
-                    " " +
-                    fulfillment.order.shipping_address?.last_name}
+            {fulfillment?.order?.shipping_address && (
+              <Row className="py-4">
+                <Text className="text-sm m-0 text-gray-500">
+                  Shipping Address
                 </Text>
-                <br />
-                <Text className="text-sm m-0 my-1 text-gray-500">
-                  {fulfillment.order.shipping_address?.address_1}
-                </Text>
-                <br />
-                <Text className="text-sm m-0 my-1 text-gray-500">
-                  {fulfillment.order.shipping_address?.address_2}
-                </Text>
-                <br />
-                <Text className="text-sm m-0 my-1 text-gray-500">
-                  {fulfillment.order.shipping_address?.city},{" "}
-                  {fulfillment.order.shipping_address?.province}{" "}
-                  {fulfillment.order.shipping_address?.postal_code}
-                </Text>
-              </address>
-            </Row>
+                <address>
+                  <Text className="text-sm m-0 my-2 text-gray-500">
+                    {fulfillment.order.shipping_address?.first_name +
+                      " " +
+                      fulfillment.order.shipping_address?.last_name}
+                  </Text>
+                  <br />
+                  <Text className="text-sm m-0 my-1 text-gray-500">
+                    {fulfillment.order.shipping_address?.address_1}
+                  </Text>
+                  <br />
+                  <Text className="text-sm m-0 my-1 text-gray-500">
+                    {fulfillment.order.shipping_address?.address_2}
+                  </Text>
+                  <br />
+                  <Text className="text-sm m-0 my-1 text-gray-500">
+                    {fulfillment.order.shipping_address?.city},{" "}
+                    {fulfillment.order.shipping_address?.province}{" "}
+                    {fulfillment.order.shipping_address?.postal_code}
+                  </Text>
+                </address>
+              </Row>
+            )}
             <Row className="py-4">
               <Text className="text-sm m-0 text-gray-500">Shipped by</Text>
               <Text className="text-sm m-0 my-2 text-gray-500">FedEx</Text>
             </Row>
-            <Row className="py-4">
-              <Column>
-                <Text className="text-sm m-0 text-gray-500">
-                  Tracking Number
-                </Text>
-                <Text className="text-sm m-0 my-2 text-gray-500">
-                  {fulfillment.labels[0].tracking_number}
-                </Text>
-              </Column>
-            </Row>
+            {fulfillment?.labels?.[0]?.tracking_number && (
+              <Row className="py-4">
+                <Column>
+                  <Text className="text-sm m-0 text-gray-500">
+                    Tracking Number
+                  </Text>
+                  <Text className="text-sm m-0 my-2 text-gray-500">
+                    {fulfillment.labels[0].tracking_number}
+                  </Text>
+                </Column>
+              </Row>
+            )}
           </Container>
 
           {/* Order Items */}
