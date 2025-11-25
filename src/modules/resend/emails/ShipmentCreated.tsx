@@ -168,17 +168,7 @@ function ShipmentCreatedEmailComponent({
               products={products}
               currencyCode={fulfillment.order.currency_code}
               items={orderItems}
-              shippingTotal={fulfillment.order.shipping_methods?.reduce(
-                (acc, current) => {
-                  if (typeof current.total === "number") {
-                    return acc + current.total;
-                  } else if (typeof current.total === "string") {
-                    return acc + parseFloat(current.total);
-                  }
-                  return acc;
-                },
-                0
-              )}
+              shippingTotal={fulfillment.order.shipping_total}
               subtotal={fulfillment.order.item_total}
               total={fulfillment.order.total}
               taxTotal={fulfillment.order.tax_total}

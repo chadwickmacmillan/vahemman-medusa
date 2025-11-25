@@ -60,14 +60,7 @@ function OrderPlacedEmailComponent({
               products={products}
               currencyCode={order.currency_code}
               items={order.items}
-              shippingTotal={order.shipping_methods?.reduce((acc, current) => {
-                if (typeof current.total === "number") {
-                  return acc + current.total;
-                } else if (typeof current.total === "string") {
-                  return acc + parseFloat(current.total);
-                }
-                return acc;
-              }, 0)}
+              shippingTotal={order.shipping_total}
               subtotal={order.item_total}
               total={order.total}
               taxTotal={order.tax_total}
