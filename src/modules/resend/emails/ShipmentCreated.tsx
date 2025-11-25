@@ -98,17 +98,14 @@ function ShipmentCreatedEmailComponent({
               ,
             </Text>
             {shipDate && (
-              <Text className="text-center text-gray-600 mt-2">
+              <Text className="text-gray-600 mt-2">
                 {isEveryItemInFulfillment ? "Your" : "Part of your"} order has
                 now shipped. Your package is being delivered by FedEx and is
                 schedule to be delivered {shipDate.toLocaleDateString()}
               </Text>
             )}
             {fulfillment.labels?.[0]?.tracking_url && (
-              <Link
-                href={fulfillment.labels[0].tracking_url}
-                className="text-center mt-4"
-              >
+              <Link href={fulfillment.labels[0].tracking_url} className="mt-4">
                 Track my package
               </Link>
             )}

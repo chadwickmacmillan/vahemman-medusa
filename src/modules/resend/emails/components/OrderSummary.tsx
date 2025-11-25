@@ -37,7 +37,7 @@ const OrderSummary = ({
           products={products}
         />
       )}
-      {subtotal && (
+      {!!subtotal && (
         <Row className="text-gray-600">
           <Column className="w-1/2">
             <Text className="m-0">Subtotal</Text>
@@ -47,7 +47,7 @@ const OrderSummary = ({
           </Column>
         </Row>
       )}
-      {shippingTotal && (
+      {!!shippingTotal && (
         <Row className="text-gray-600">
           <Column className="w-1/2">
             <Text className="m-0">Shipping</Text>
@@ -71,7 +71,7 @@ const OrderSummary = ({
           </Text>
         </Column>
       </Row>
-      {total && (
+      {!!total && (
         <Row className="border-t border-gray-200 mt-4 text-gray-800 font-bold">
           <Column className="w-1/2">
             <Text>Total</Text>

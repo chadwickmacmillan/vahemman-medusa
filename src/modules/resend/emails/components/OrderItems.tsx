@@ -26,7 +26,7 @@ const OrderItems = ({
               <Row>
                 <Column className="w-1/3">
                   <Img
-                    src={variant?.thumbnail ?? ""}
+                    src={variant?.thumbnail ? encodeURI(variant.thumbnail) : ""}
                     alt={product?.title ?? ""}
                     width="100%"
                   />

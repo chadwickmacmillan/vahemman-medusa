@@ -17,7 +17,6 @@ export const sendShipmentCreatedWorkflow = createWorkflow(
     const { data: fulfillments } = useQueryGraphStep({
       entity: "fulfillment",
       fields: [
-        "*,",
         "id",
         "items.*",
         "labels.*",
