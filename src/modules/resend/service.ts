@@ -107,7 +107,7 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
       case Templates.PASSWORD_RESET:
         return "Reset Your Password";
       case Templates.USER_INVITED:
-        return "You've been invited to join Vahemman workspace";
+        return "You've been invited to join Vähemmän workspace";
       default:
         return "New Email";
     }
