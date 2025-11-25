@@ -53,6 +53,7 @@ function ShipmentCreatedEmailComponent({
   const orderItems = useMemo(
     () =>
       fulfillment.order.items?.reduce((acc, current) => {
+        console.log(current, fulfillmentOrderLineItemIds);
         if (fulfillmentOrderLineItemIds.includes(current.id)) {
           acc.push(current);
         }
@@ -68,10 +69,6 @@ function ShipmentCreatedEmailComponent({
       ),
     [fulfillment, fulfillmentOrderLineItemIds]
   );
-
-  const shipDate = fulfillment.shipped_at
-    ? new Date(fulfillment.shipped_at)
-    : null;
 
   return (
     <Tailwind>
@@ -97,13 +94,10 @@ function ShipmentCreatedEmailComponent({
                 fulfillment.order.shipping_address?.last_name}
               ,
             </Text>
-            {shipDate && (
-              <Text className="text-gray-600 mt-2">
-                {isEveryItemInFulfillment ? "Your" : "Part of your"} order has
-                now shipped. Your package is being delivered by FedEx and is
-                schedule to be delivered {shipDate.toLocaleDateString()}
-              </Text>
-            )}
+            <Text className="text-gray-600 mt-2">
+              {isEveryItemInFulfillment ? "Your" : "Part of your"} order has now
+              shipped. Your package is being delivered by FedEx
+            </Text>
             {fulfillment.labels?.[0]?.tracking_url && (
               <Link href={fulfillment.labels[0].tracking_url} className="mt-4">
                 Track my package
@@ -113,7 +107,7 @@ function ShipmentCreatedEmailComponent({
 
           {/* Tracking information */}
           <Container className="px-6">
-            <Row>
+            {/* <Row>
               <Text className="text-sm m-0 text-gray-500">
                 Estimated Delivery Date
               </Text>
@@ -122,7 +116,7 @@ function ShipmentCreatedEmailComponent({
                   {shipDate.toLocaleDateString()}
                 </Text>
               )}
-            </Row>
+            </Row> */}
             {fulfillment?.order?.shipping_address && (
               <Row className="py-4">
                 <Text className="text-sm m-0 text-gray-500">
@@ -151,12 +145,12 @@ function ShipmentCreatedEmailComponent({
                 </address>
               </Row>
             )}
-            <Row className="py-4">
+            <Row className="py-2">
               <Text className="text-sm m-0 text-gray-500">Shipped by</Text>
               <Text className="text-sm m-0 my-2 text-gray-500">FedEx</Text>
             </Row>
             {fulfillment?.labels?.[0]?.tracking_number && (
-              <Row className="py-4">
+              <Row className="py-2">
                 <Column>
                   <Text className="text-sm m-0 text-gray-500">
                     Tracking Number

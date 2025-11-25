@@ -37,7 +37,9 @@ export const sendShipmentCreatedWorkflow = createWorkflow(
       entity: "product",
       fields: [
         "*",
+        "images.*",
         "variants.*",
+        "variants.inventory_quantity",
         "variants.images.*",
         "variants.options.*",
         "variants.options.option.*",
