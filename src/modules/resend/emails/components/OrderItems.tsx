@@ -37,11 +37,14 @@ const OrderItems = ({
                   </Text>
                   {variant?.options.map((option, i) => (
                     <Text
-                      className={`text-gray-600 ${i === 0 ? "mt-4 mb-2" : "mt-2"}`}
+                      className={`text-gray-600 ${i === 0 ? "mt-4" : "mt-1"}`}
                     >
                       {option.option?.title}: {option.value}
                     </Text>
                   ))}
+                  <Text className={`text-gray-600 mt-1`}>
+                    Qty: {item.quantity}
+                  </Text>
                   <Text className="text-gray-800 mt-2 font-bold">
                     {formatPrice(item.total, currencyCode)}
                   </Text>
