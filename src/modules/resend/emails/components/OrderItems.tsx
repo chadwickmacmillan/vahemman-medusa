@@ -43,7 +43,7 @@ const OrderItems = ({
                     </Text>
                   ))}
                   <Text className={`text-gray-600 mt-1`}>
-                    Qty: {item.quantity}
+                    Qty: {item?.quantity}
                   </Text>
                   <Text className="text-gray-800 mt-2 font-bold">
                     {formatPrice(item.total, currencyCode)}
