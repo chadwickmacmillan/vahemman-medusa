@@ -3,7 +3,7 @@ import type { SubscriberArgs, SubscriberConfig } from "@medusajs/framework";
 import { sendOrderConfirmationWorkflow } from "../workflows/notifications/send-order-confirmation";
 import { createOrderTransactionWorkflow } from "../workflows/taxjar/create-order-transaction";
 
-export default async function orderPlacedHandler({
+export default async function orderUpdatedHandler({
   event: { data },
   container,
 }: SubscriberArgs<{ id: string }>) {
@@ -12,13 +12,8 @@ export default async function orderPlacedHandler({
       order_id: data.id,
     },
   });
-  await sendOrderConfirmationWorkflow(container).run({
-    input: {
-      id: data.id,
-    },
-  });
 }
 
 export const config: SubscriberConfig = {
-  event: "order.placed",
+  event: "order.updated",
 };

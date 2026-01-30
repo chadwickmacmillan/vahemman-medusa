@@ -167,18 +167,8 @@ module.exports = defineConfig({
       options: {
         providers: [
           {
-            id: "avalara",
-            options: {
-              username: process.env.AVALARA_USERNAME,
-              password: process.env.AVALARA_PASSWORD,
-              appName: process.env.AVALARA_APP_NAME,
-              appVersion: process.env.AVALARA_APP_VERSION,
-              appEnvironment: process.env.AVALARA_APP_ENVIRONMENT,
-              machineName: process.env.AVALARA_MACHINE_NAME,
-              timeout: process.env.AVALARA_TIMEOUT,
-              companyCode: process.env.AVALARA_COMPANY_CODE,
-              companyId: process.env.AVALARA_COMPANY_ID,
-            },
+            id: "taxjar",
+            options: { apiKey: process.env.TAXJAR_API_KEY },
           },
         ],
       },

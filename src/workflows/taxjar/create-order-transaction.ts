@@ -7,9 +7,9 @@ import {
   updateOrderWorkflow,
   useQueryGraphStep,
 } from "@medusajs/medusa/core-flows";
+import TaxjarTaxModuleProvider from "../../modules/taxjar/service";
 import { createTransactionStep } from "./steps/create-transaction";
-import { DocumentType } from "avatax/lib/enums/DocumentType";
-import AvalaraTaxModuleProvider from "../../modules/avalara/service";
+import { CreateOrderParams, LineItem } from "taxjar/dist/types/paramTypes";
 
 type WorkflowInput = {
   order_id: string;
@@ -59,51 +59,42 @@ export const createOrderTransactionWorkflow = createWorkflow(
         id: input.order_id,
       },
     });
-
     const transactionInput = transform({ orders }, ({ orders }) => {
-      const providerId = `tp_${AvalaraTaxModuleProvider.identifier}_avalara`;
-      return {
-        lines: [
-          ...(orders[0]?.items?.map((item) => {
-            return {
-              number: item?.id ?? "",
-              quantity: item?.quantity ?? 0,
-              amount: item?.unit_price ?? 0,
-              taxCode:
-                item?.tax_lines?.find(
-                  (taxLine) => taxLine?.provider_id === providerId
-                )?.code ?? "",
-              itemCode: item?.product_id ?? "",
-            };
-          }) ?? []),
-          ...(orders[0]?.shipping_methods?.map((shippingMethod) => {
-            return {
-              number: shippingMethod?.id ?? "",
-              quantity: 1,
-              amount: shippingMethod?.amount ?? 0,
-              taxCode:
-                shippingMethod?.tax_lines?.find(
-                  (taxLine) => taxLine?.provider_id === providerId
-                )?.code ?? "",
-            };
-          }) ?? []),
-        ],
-        date: new Date(),
-        customerCode: orders[0]?.customer?.id ?? "",
-        addresses: {
-          singleLocation: {
-            line1: orders[0]?.shipping_address?.address_1 ?? "",
-            line2: orders[0]?.shipping_address?.address_2 ?? "",
-            city: orders[0]?.shipping_address?.city ?? "",
-            region: orders[0]?.shipping_address?.province ?? "",
-            postalCode: orders[0]?.shipping_address?.postal_code ?? "",
-            country:
-              orders[0]?.shipping_address?.country_code?.toUpperCase() ?? "",
-          },
-        },
-        currencyCode: orders[0]?.currency_code.toUpperCase() ?? "",
-        type: DocumentType.SalesInvoice,
+      const providerId = `tp_${TaxjarTaxModuleProvider.identifier}_taxjar`;
+      const lineItems = orders[0]?.items?.map((item) => {
+        return {
+          id: item?.id ?? "",
+          quantity: item?.quantity ?? 0,
+          product_identifier: item?.product_id ?? "",
+          description: item?.product_description ?? "",
+          product_tax_code:
+            item?.tax_lines?.find(
+              (taxLine) => taxLine?.provider_id === providerId
+            )?.code ?? "",
+          unit_price: item?.unit_price ?? 0,
+          discount:
+            (item?.discount_total ?? 0) - (item?.discount_tax_total ?? 0),
+          sales_tax: item?.tax_total ?? 0,
+        } satisfies LineItem;
+      });
+      const input: CreateOrderParams = {
+        transaction_id: "Taxjar-" + (orders[0]?.id ?? ""),
+        transaction_date:
+          (orders[0]?.created_at as string) ?? new Date().toISOString(),
+        provider: "medusa",
+        to_country:
+          orders[0]?.shipping_address?.country_code?.toUpperCase() ?? "",
+        to_zip: orders[0]?.shipping_address?.postal_code ?? "",
+        to_state: orders[0]?.shipping_address?.province ?? "",
+        to_city: orders[0]?.shipping_address?.city ?? "",
+        to_street: orders[0]?.shipping_address?.address_1 ?? "",
+        amount: orders[0]?.total - orders[0]?.tax_total, // Total amount of the order with shipping, excluding sales tax in dollars
+        line_items: lineItems ?? [],
+        shipping: orders[0]?.shipping_total - orders[0]?.shipping_tax_total, // Total amount of shipping for the order in dollars.
+        sales_tax: orders[0]?.tax_total, // Total amount of sales tax collected for the order in dollars.
+        customer_id: orders[0]?.customer?.id ?? "",
       };
+      return input;
     });
 
     const response = createTransactionStep(transactionInput);
@@ -113,7 +104,7 @@ export const createOrderTransactionWorkflow = createWorkflow(
         id: input.order_id,
         user_id: "",
         metadata: {
-          avalara_transaction_code: response.code,
+          taxjar_transaction_id: response.order.transaction_id,
         },
       },
     });
