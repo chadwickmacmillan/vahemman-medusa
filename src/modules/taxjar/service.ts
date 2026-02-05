@@ -1,13 +1,15 @@
-import { ITaxProvider, TaxTypes } from "@medusajs/framework/types";
-import Taxjar from "taxjar";
-import { MedusaError } from "@medusajs/framework/utils";
 import {
+  ITaxProvider,
+  TaxTypes,
   ItemTaxCalculationLine,
   ItemTaxLineDTO,
   ShippingTaxCalculationLine,
   ShippingTaxLineDTO,
   TaxCalculationContext,
+  IProductModuleService,
 } from "@medusajs/framework/types";
+import Taxjar from "taxjar";
+import { MedusaError } from "@medusajs/framework/utils";
 import { ModuleOptions } from "./types";
 import { Logger } from "@medusajs/medusa";
 import {
@@ -20,6 +22,7 @@ import {
 
 type InjectedDependencies = {
   logger: Logger;
+  productService: IProductModuleService;
 };
 
 class TaxjarTaxModuleProvider implements ITaxProvider {
@@ -27,8 +30,13 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
   protected logger_: Logger;
   protected options_: ModuleOptions;
   protected client: Taxjar;
+  protected defaultTaxCode?: string;
+  protected productService_: IProductModuleService;
 
-  constructor({ logger }: InjectedDependencies, options: ModuleOptions) {
+  constructor(
+    { productService, logger }: InjectedDependencies,
+    options: ModuleOptions
+  ) {
     if (!options.apiKey) {
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
@@ -37,14 +45,16 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
     }
     this.logger_ = logger;
     this.options_ = options;
+    this.productService_ = productService;
 
-    // assuming you're initializing a client
     this.client = new Taxjar(options);
+    this.defaultTaxCode = options?.defaultTaxCode;
   }
 
   getIdentifier(): string {
     return TaxjarTaxModuleProvider.identifier;
   }
+
   async getTaxLines(
     itemLines: ItemTaxCalculationLine[],
     shippingLines: ShippingTaxCalculationLine[],
@@ -52,13 +62,15 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
   ): Promise<(ItemTaxLineDTO | ShippingTaxLineDTO)[]> {
     try {
       const taxLineItems: TaxLineItem[] = await Promise.all(
-        itemLines.map(async (item) => {
+        itemLines.map(async (line) => {
+          const productTaxCode = await this.getProductTaxCode(
+            line.line_item.product_id
+          );
           return {
-            id: item.line_item.id,
-            discount: 0,
-            quantity: Number(item.line_item.quantity?.toString()),
-            unit_price: Number(item.line_item.unit_price?.toString()),
-            product_tax_code: "", // TODO,
+            id: line.line_item.id,
+            quantity: Number(line.line_item.quantity?.toString()),
+            unit_price: Number(line.line_item.unit_price?.toString()),
+            product_tax_code: productTaxCode,
           };
         })
       );
@@ -66,6 +78,7 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
       const shipping = shippingLines.reduce((acc, l) => {
         return (acc += Number(l.shipping_line.unit_price?.toString()));
       }, 0);
+
       const { tax } = await this.client.taxForOrder({
         to_country: context.address.country_code,
         to_zip: context.address.postal_code,
@@ -100,8 +113,8 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
         (i) => {
           return {
             shipping_line_id: i.shipping_line.id,
-            code: "SHIPPING",
-            name: "SHIPPING",
+            code: "shipping",
+            name: "shipping",
             provider_id: this.getIdentifier(),
             rate: tax.freight_taxable
               ? (tax.breakdown?.shipping?.combined_tax_rate ?? 0) * 100 // Fraction to percent conversion
@@ -118,9 +131,14 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
       );
     }
   }
-  async createTransaction(transactionParams: CreateOrderParams) {
+
+  async createTransaction(params: Omit<CreateOrderParams, "provider">) {
     try {
-      return await this.client.createOrder(transactionParams);
+      const res = await this.client.createOrder({
+        ...params,
+        provider: "medusa",
+      });
+      return res.order;
     } catch (error) {
       throw new MedusaError(
         MedusaError.Types.UNEXPECTED_STATE,
@@ -130,9 +148,10 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
   }
   async deleteTransaction(transactionId: string) {
     try {
-      return await this.client.deleteOrder(transactionId, {
+      const res = await this.client.deleteOrder(transactionId, {
         provider: "medusa",
       });
+      return res.order;
     } catch (error) {
       throw new MedusaError(
         MedusaError.Types.UNEXPECTED_STATE,
@@ -140,9 +159,10 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
       );
     }
   }
-  async updateTransaction(transactionParams: UpdateOrderParams) {
+  async updateTransaction(params: UpdateOrderParams) {
     try {
-      return await this.client.updateOrder(transactionParams);
+      const res = await this.client.updateOrder(params);
+      return res.order;
     } catch (error) {
       throw new MedusaError(
         MedusaError.Types.UNEXPECTED_STATE,
@@ -150,9 +170,26 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
       );
     }
   }
-  async createRefund(refundParams: CreateRefundParams) {
+  async showTransaction(transactionId: string) {
     try {
-      return await this.client.createRefund(refundParams);
+      const res = await this.client.showOrder(transactionId, {
+        provider: "medusa",
+      });
+      return res.order;
+    } catch (error) {
+      throw new MedusaError(
+        MedusaError.Types.UNEXPECTED_STATE,
+        `An error occurred while fetching transaction for Taxjar: ${error}`
+      );
+    }
+  }
+  async createRefund(params: Omit<CreateRefundParams, "provider">) {
+    try {
+      const res = await this.client.createRefund({
+        ...params,
+        provider: "medusa",
+      });
+      return res.refund;
     } catch (error) {
       throw new MedusaError(
         MedusaError.Types.UNEXPECTED_STATE,
@@ -162,9 +199,10 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
   }
   async deleteRefund(transactionId: string) {
     try {
-      return await this.client.deleteRefund(transactionId, {
+      const res = await this.client.deleteRefund(transactionId, {
         provider: "medusa",
       });
+      return res.refund;
     } catch (error) {
       throw new MedusaError(
         MedusaError.Types.UNEXPECTED_STATE,
@@ -172,15 +210,38 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
       );
     }
   }
-  async updateRefund(refundParams: UpdateRefundParams) {
+  async updateRefund(params: UpdateRefundParams) {
     try {
-      return await this.client.updateRefund(refundParams);
+      const res = await this.client.updateRefund(params);
+      return res.refund;
     } catch (error) {
       throw new MedusaError(
         MedusaError.Types.UNEXPECTED_STATE,
         `An error occurred while updating refund for Taxjar: ${error}`
       );
     }
+  }
+  async showRefund(transactionId: string) {
+    try {
+      const res = await this.client.showRefund(transactionId, {
+        provider: "medusa",
+      });
+      return res.refund;
+    } catch (error) {
+      throw new MedusaError(
+        MedusaError.Types.UNEXPECTED_STATE,
+        `An error occurred while fetching refund for Taxjar: ${error}`
+      );
+    }
+  }
+  private async getProductTaxCode(productId: string) {
+    const result = await this.productService_.retrieveProduct(productId, {
+      relations: ["categories"],
+    });
+    if (!result.categories) {
+      return this?.defaultTaxCode ?? "";
+    }
+    return result.categories[0].tax_code?.code || this?.defaultTaxCode || "";
   }
 }
 

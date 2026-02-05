@@ -12,7 +12,7 @@ import { createTransactionStep } from "./steps/create-transaction";
 import { CreateOrderParams, LineItem } from "taxjar/dist/types/paramTypes";
 
 type WorkflowInput = {
-  order_id: string;
+  id: string;
 };
 
 export const createOrderTransactionWorkflow = createWorkflow(
@@ -56,21 +56,20 @@ export const createOrderTransactionWorkflow = createWorkflow(
         "shipping_address.metadata",
       ],
       filters: {
-        id: input.order_id,
+        id: input.id,
       },
     });
+
     const transactionInput = transform({ orders }, ({ orders }) => {
+      const [order] = orders;
       const providerId = `tp_${TaxjarTaxModuleProvider.identifier}_taxjar`;
-      const lineItems = orders[0]?.items?.map((item) => {
+      const lineItems = order?.items?.map((item) => {
         return {
           id: item?.id ?? "",
           quantity: item?.quantity ?? 0,
           product_identifier: item?.product_id ?? "",
           description: item?.product_description ?? "",
-          product_tax_code:
-            item?.tax_lines?.find(
-              (taxLine) => taxLine?.provider_id === providerId
-            )?.code ?? "",
+          product_tax_code: "", // TODO
           unit_price: item?.unit_price ?? 0,
           discount:
             (item?.discount_total ?? 0) - (item?.discount_tax_total ?? 0),
@@ -78,21 +77,20 @@ export const createOrderTransactionWorkflow = createWorkflow(
         } satisfies LineItem;
       });
       const input: CreateOrderParams = {
-        transaction_id: "Taxjar-" + (orders[0]?.id ?? ""),
+        transaction_id: "Taxjar-" + (order?.id ?? ""),
         transaction_date:
-          (orders[0]?.created_at as string) ?? new Date().toISOString(),
+          (order?.created_at as string) ?? new Date().toISOString(),
         provider: "medusa",
-        to_country:
-          orders[0]?.shipping_address?.country_code?.toUpperCase() ?? "",
-        to_zip: orders[0]?.shipping_address?.postal_code ?? "",
-        to_state: orders[0]?.shipping_address?.province ?? "",
-        to_city: orders[0]?.shipping_address?.city ?? "",
-        to_street: orders[0]?.shipping_address?.address_1 ?? "",
-        amount: orders[0]?.total - orders[0]?.tax_total, // Total amount of the order with shipping, excluding sales tax in dollars
+        to_country: order?.shipping_address?.country_code?.toUpperCase() ?? "",
+        to_zip: order?.shipping_address?.postal_code ?? "",
+        to_state: order?.shipping_address?.province ?? "",
+        to_city: order?.shipping_address?.city ?? "",
+        to_street: order?.shipping_address?.address_1 ?? "",
+        amount: order?.total - order?.tax_total, // Total amount of the order with shipping, excluding sales tax in dollars
         line_items: lineItems ?? [],
-        shipping: orders[0]?.shipping_total - orders[0]?.shipping_tax_total, // Total amount of shipping for the order in dollars.
-        sales_tax: orders[0]?.tax_total, // Total amount of sales tax collected for the order in dollars.
-        customer_id: orders[0]?.customer?.id ?? "",
+        shipping: order?.shipping_total - order?.shipping_tax_total, // Total amount of shipping for the order in dollars.
+        sales_tax: order?.tax_total, // Total amount of sales tax collected for the order in dollars.
+        customer_id: order?.customer?.id ?? "",
       };
       return input;
     });
@@ -101,10 +99,10 @@ export const createOrderTransactionWorkflow = createWorkflow(
 
     const order = updateOrderWorkflow.runAsStep({
       input: {
-        id: input.order_id,
+        id: input.id,
         user_id: "",
         metadata: {
-          taxjar_transaction_id: response.order.transaction_id,
+          taxjar_transaction_id: response.transaction_id,
         },
       },
     });

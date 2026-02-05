@@ -1,12 +1,11 @@
 import type { SubscriberArgs, SubscriberConfig } from "@medusajs/framework";
+import { createRefundTransactionWorkflow } from "../workflows/taxjar/create-refund-transaction";
 
-import { sendOrderConfirmationWorkflow } from "../workflows/notifications/send-order-confirmation";
-
-export default async function orderPlacedHandler({
+export default async function refundCreatedHandler({
   event: { data },
   container,
 }: SubscriberArgs<{ id: string }>) {
-  await sendOrderConfirmationWorkflow(container).run({
+  await createRefundTransactionWorkflow(container).run({
     input: {
       id: data.id,
     },
@@ -14,5 +13,5 @@ export default async function orderPlacedHandler({
 }
 
 export const config: SubscriberConfig = {
-  event: "order.placed",
+  event: ["payment.refunded"],
 };

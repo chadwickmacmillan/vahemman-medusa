@@ -11,7 +11,6 @@ export type SanitySyncProductsWorkflowInput = {
 
 export const sanitySyncProductsWorkflow = createWorkflow(
   { name: "sanity-sync-products", retentionTime: 10000 },
-
   function (input: SanitySyncProductsWorkflowInput) {
     const result = syncStep(input);
 

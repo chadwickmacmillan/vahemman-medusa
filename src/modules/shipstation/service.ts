@@ -277,6 +277,7 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
 
     return fulfillmentOptions;
   }
+
   async canCalculate(data: CreateShippingOptionDTO): Promise<boolean> {
     return true;
   }

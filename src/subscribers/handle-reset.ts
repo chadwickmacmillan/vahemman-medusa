@@ -16,7 +16,7 @@ export default async function resetPasswordTokenHandler({
   let urlPrefix = "";
 
   if (actor_type === "customer") {
-    urlPrefix = config.admin.storefrontUrl || "https://storefront.com";
+    urlPrefix = config.admin.storefrontUrl || "https://vahemman.com";
   } else {
     const backendUrl =
       config.admin.backendUrl !== "/"

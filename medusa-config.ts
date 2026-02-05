@@ -106,7 +106,7 @@ module.exports = defineConfig({
       resolve: "@medusajs/medusa/workflow-engine-redis",
       options: {
         redis: {
-          url: process.env.REDIS_URL,
+          redisUrl: process.env.REDIS_URL,
         },
       },
     },
@@ -162,13 +162,23 @@ module.exports = defineConfig({
         },
       },
     },
+    // {
+    //   resolve: "@medusajs/medusa/tax",
+    //   options: {
+    //     providers: [
+    //       {
+    //         id: "taxjar",
+    //         options: { apiKey: process.env.TAXJAR_API_KEY },
+    //       },
+    //     ],
+    //   },
+    // },
     {
-      resolve: "@medusajs/medusa/tax",
+      resolve: "./src/modules/taxcode",
       options: {
         providers: [
           {
-            id: "taxjar",
-            options: { apiKey: process.env.TAXJAR_API_KEY },
+            id: "tax_code",
           },
         ],
       },

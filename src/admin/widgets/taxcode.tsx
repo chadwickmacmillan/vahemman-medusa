@@ -1,5 +1,5 @@
 import { defineWidgetConfig } from "@medusajs/admin-sdk";
-import { Button, Container, FocusModal, Heading, Select } from "@medusajs/ui";
+import { Button, Container, Heading } from "@medusajs/ui";
 import { useState } from "react";
 import { SectionRow } from "../components/SectionRow";
 import { useTaxCode } from "../hooks/taxcode";

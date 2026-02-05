@@ -14,10 +14,12 @@ export const createRefundStep = createStep(
 
     const response = await taxjarProviderService.createRefund(input);
 
-    return new StepResponse(response, response);
+    return new StepResponse(response, {
+      transaction_id: response.transaction_id,
+    });
   },
   async (data, { container }) => {
-    if (!data?.refund?.transaction_id) {
+    if (!data?.transaction_id) {
       return;
     }
     const taxModuleService = container.resolve("tax");
@@ -25,6 +27,6 @@ export const createRefundStep = createStep(
       `tp_${TaxjarTaxModuleProvider.identifier}_taxjar`
     ) as TaxjarTaxModuleProvider;
 
-    await taxjarProviderService.deleteRefund(data.refund.transaction_id);
+    await taxjarProviderService.deleteRefund(data.transaction_id);
   }
 );

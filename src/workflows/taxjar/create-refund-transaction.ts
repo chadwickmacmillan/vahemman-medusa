@@ -3,155 +3,129 @@ import {
   transform,
   WorkflowResponse,
 } from "@medusajs/framework/workflows-sdk";
-import {
-  updateOrderWorkflow,
-  useQueryGraphStep,
-} from "@medusajs/medusa/core-flows";
+import { useQueryGraphStep } from "@medusajs/medusa/core-flows";
 import TaxjarTaxModuleProvider from "../../modules/taxjar/service";
 import { CreateRefundParams, LineItem } from "taxjar/dist/types/paramTypes";
-import { updateTransactionStep } from "./steps/update-transaction";
+import { createRefundStep } from "./steps/create-refund";
 
 type WorkflowInput = {
-  refund_id: string;
+  id: string;
 };
 
 export const createRefundTransactionWorkflow = createWorkflow(
   "create-refund-transaction-workflow",
   (input: WorkflowInput) => {
-    const { data: refunds } = useQueryGraphStep({
-      entity: "refund",
+    const { data: paymentCollections } = useQueryGraphStep({
+      entity: "payment_collection",
       fields: [
-        "id",
-        "currency_code",
-        "items.quantity",
-        "items.id",
-        "items.unit_price",
-        "items.product_id",
-        "items.tax_lines.id",
-        "items.tax_lines.description",
-        "items.tax_lines.code",
-        "items.tax_lines.rate",
-        "items.tax_lines.provider_id",
-        "items.variant.sku",
-        "shipping_methods.id",
-        "shipping_methods.amount",
-        "shipping_methods.tax_lines.id",
-        "shipping_methods.tax_lines.description",
-        "shipping_methods.tax_lines.code",
-        "shipping_methods.tax_lines.rate",
-        "shipping_methods.tax_lines.provider_id",
-        "shipping_methods.shipping_option_id",
-        "customer.id",
-        "customer.email",
-        "customer.metadata",
-        "customer.groups.id",
-        "shipping_address.id",
-        "shipping_address.address_1",
-        "shipping_address.address_2",
-        "shipping_address.city",
-        "shipping_address.postal_code",
-        "shipping_address.country_code",
-        "shipping_address.region_code",
-        "shipping_address.province",
-        "shipping_address.metadata",
+        "order.items.id",
+        "order.items.quantity",
+        "order.items.product_id",
+        "order.items.product_description",
+        "order.items.unit_price",
+        "order.items.tax_lines.id",
+        "order.items.tax_lines.description",
+        "order.items.tax_lines.code",
+        "order.items.tax_lines.rate",
+        "order.items.tax_lines.provider_id",
+        "order.items.variant.sku",
+        "order.shipping_methods.id",
+        "order.shipping_methods.amount",
+        "order.shipping_methods.tax_lines.id",
+        "order.shipping_methods.tax_lines.description",
+        "order.shipping_methods.tax_lines.code",
+        "order.shipping_methods.tax_lines.rate",
+        "order.shipping_methods.tax_lines.provider_id",
+        "order.shipping_methods.shipping_option_id",
+        "order.customer.id",
+        "order.customer.email",
+        "order.customer.metadata",
+        "order.customer.groups.id",
+        "sorder.hipping_address.id",
+        "order.shipping_address.address_1",
+        "order.shipping_address.address_2",
+        "order.shipping_address.city",
+        "order.shipping_address.postal_code",
+        "order.shipping_address.country_code",
+        "order.shipping_address.region_code",
+        "order.shipping_address.province",
+        "order.shipping_address.metadata",
+        "payments.id", // payments in this collection
+        "payments.refunds.id",
+        "payments.refunds.amount",
+        "payments.refunds.created_at",
       ],
       filters: {
-        id: input.refund_id,
+        payments: {
+          id: input.id,
+        },
       },
     });
 
-    const { data: orders } = useQueryGraphStep({
-      entity: "order",
-      fields: [
-        "id",
-        "currency_code",
-        "items.quantity",
-        "items.id",
-        "items.unit_price",
-        "items.product_id",
-        "items.tax_lines.id",
-        "items.tax_lines.description",
-        "items.tax_lines.code",
-        "items.tax_lines.rate",
-        "items.tax_lines.provider_id",
-        "items.variant.sku",
-        "shipping_methods.id",
-        "shipping_methods.amount",
-        "shipping_methods.tax_lines.id",
-        "shipping_methods.tax_lines.description",
-        "shipping_methods.tax_lines.code",
-        "shipping_methods.tax_lines.rate",
-        "shipping_methods.tax_lines.provider_id",
-        "shipping_methods.shipping_option_id",
-        "customer.id",
-        "customer.email",
-        "customer.metadata",
-        "customer.groups.id",
-        "shipping_address.id",
-        "shipping_address.address_1",
-        "shipping_address.address_2",
-        "shipping_address.city",
-        "shipping_address.postal_code",
-        "shipping_address.country_code",
-        "shipping_address.region_code",
-        "shipping_address.province",
-        "shipping_address.metadata",
-      ],
-      filters: {},
-    });
-
     const transactionInput = transform(
-      { refunds, orders },
-      ({ refunds, orders }) => {
+      { paymentCollections },
+      ({ paymentCollections }) => {
         const providerId = `tp_${TaxjarTaxModuleProvider.identifier}_taxjar`;
-        const lineItems = orders[0]?.items?.map((item) => {
+        const [paymentCollection] = paymentCollections;
+        const { order } = paymentCollection;
+        const [payment] = paymentCollection.payments;
+
+        const refunds = payment?.refunds.sort((a, b) => {
+          if (!a || !b) return 0;
+          if (
+            typeof a.created_at !== "string" ||
+            typeof b.created_at !== "string"
+          )
+            return 0;
+          return a.created_at.localeCompare(b.created_at);
+        });
+
+        if (!order) return {};
+
+        if (!refunds || !refunds[0]) return {};
+
+        const [refund] = refunds;
+
+        const lineItems = order?.items?.map((item) => {
           return {
             id: item?.id ?? "",
             quantity: item?.quantity ?? 0,
             product_identifier: item?.product_id ?? "",
             description: item?.product_description ?? "",
-            product_tax_code:
-              item?.tax_lines?.find(
-                (taxLine) => taxLine?.provider_id === providerId
-              )?.code ?? "",
+            product_tax_code: "", // TODO
             unit_price: item?.unit_price ?? 0,
             discount:
               (item?.discount_total ?? 0) - (item?.discount_tax_total ?? 0),
             sales_tax: item?.tax_total ?? 0,
           } satisfies LineItem;
         });
+
         const input: CreateRefundParams = {
-          transaction_id: "taxjar_refund-" + (orders[0]?.id ?? ""),
+          transaction_id: refund.id ?? "",
+          transaction_reference_id: order.id ?? "",
           transaction_date:
-            (refunds[0]?.created_at as string) ?? new Date().toISOString(),
+            refund && typeof refund.created_at === "string"
+              ? refund.created_at
+              : new Date().toISOString(),
           to_country:
-            orders[0]?.shipping_address?.country_code?.toUpperCase() ?? "",
-          to_zip: orders[0]?.shipping_address?.postal_code ?? "",
-          to_state: orders[0]?.shipping_address?.province ?? "",
-          to_city: orders[0]?.shipping_address?.city ?? "",
-          to_street: orders[0]?.shipping_address?.address_1 ?? "",
-          amount: orders[0]?.total - orders[0]?.tax_total, // Total amount of the order with shipping, excluding sales tax in dollars
+            order?.shipping_address?.country_code?.toUpperCase() ?? "",
+          to_zip: order?.shipping_address?.postal_code ?? "",
+          to_state: order?.shipping_address?.province ?? "",
+          to_city: order?.shipping_address?.city ?? "",
+          to_street: order?.shipping_address?.address_1 ?? "",
+          amount: (order?.total ?? 0) - (order?.tax_total ?? 0), // Total amount of the order with shipping, excluding sales tax in dollars
           line_items: lineItems ?? [],
-          shipping: orders[0]?.shipping_total - orders[0]?.shipping_tax_total, // Total amount of shipping for the order in dollars.
-          sales_tax: orders[0]?.tax_total, // Total amount of sales tax collected for the order in dollars.
-          customer_id: orders[0]?.customer?.id ?? "",
+          shipping:
+            (order?.shipping_total ?? 0) - (order?.shipping_tax_total ?? 0), // Total amount of shipping for the order in dollars.
+          sales_tax: order?.tax_total ?? 0, // Total amount of sales tax collected for the order in dollars.
+          customer_id: order?.customer?.id ?? "",
         };
         return input;
       }
     );
 
-    const response = updateTransactionStep(transactionInput);
+    const response = createRefundStep(transactionInput);
 
-    const order = updateOrderWorkflow.runAsStep({
-      input: {
-        id: input.order_id,
-        user_id: "",
-        metadata: {
-          taxjar_transaction_id: response.order.transaction_id,
-        },
-      },
-    });
-
-    return new WorkflowResponse(order);
+    return new WorkflowResponse(response);
   }
 );

@@ -35,6 +35,7 @@
     "@sanity/client": "^7.14.1",
     "avatax": "^25.12.0",
     "react-email": "^5.2.5",
+    "react-router-dom": "^7.13.0",
     "resend": "^6.9.1",
     "sanity": "^5.7.0",
     "taxjar": "^4.1.0"
