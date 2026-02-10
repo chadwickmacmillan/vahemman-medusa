@@ -9,7 +9,7 @@ import {
   IProductModuleService,
 } from "@medusajs/framework/types";
 import Taxjar from "taxjar";
-import { MedusaError } from "@medusajs/framework/utils";
+import { MedusaError, Modules } from "@medusajs/framework/utils";
 import { ModuleOptions } from "./types";
 import { Logger } from "@medusajs/medusa";
 import {
@@ -23,7 +23,7 @@ import { ProductDTOWithTaxCode } from "../tax_code/types";
 
 type InjectedDependencies = {
   logger: Logger;
-  product: IProductModuleService;
+  [Modules.PRODUCT]: IProductModuleService;
 };
 
 class TaxjarTaxModuleProvider implements ITaxProvider {
