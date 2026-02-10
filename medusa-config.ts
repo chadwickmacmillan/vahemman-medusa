@@ -173,6 +173,7 @@ module.exports = defineConfig({
             dependencies: [Modules.PRODUCT],
           },
         ],
+        dependencies: [Modules.PRODUCT],
       },
     },
     {
