@@ -67,6 +67,7 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
           const productTaxCode = await this.getProductTaxCode(
             line.line_item.product_id
           );
+          console.log(productTaxCode, "product Tax Code");
           return {
             id: line.line_item.id,
             quantity: Number(line.line_item.quantity?.toString()),
@@ -80,12 +81,9 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
         return (acc += Number(l.shipping_line.unit_price?.toString()));
       }, 0);
 
-      console.log(
-        context.address.province_code,
-        context.address,
-        "province code"
-      );
+      console.log(taxLineItems, "tax Line items");
 
+      console.log(shipping, "shipping");
       const { tax } = await this.client.taxForOrder({
         to_country: context.address.country_code ?? "",
         to_zip: context.address.postal_code ?? "",
