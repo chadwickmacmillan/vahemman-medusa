@@ -1,5 +1,6 @@
 import { loadEnv, defineConfig } from "@medusajs/framework/utils";
 import { Modules } from "@medusajs/framework/utils";
+import { Context, OrderTypes } from "@medusajs/framework/types";
 
 loadEnv(process.env.NODE_ENV || "development", process.cwd());
 
@@ -162,19 +163,21 @@ module.exports = defineConfig({
         },
       },
     },
-    // {
-    //   resolve: "@medusajs/medusa/tax",
-    //   options: {
-    //     providers: [
-    //       {
-    //         id: "taxjar",
-    //         options: { apiKey: process.env.TAXJAR_API_KEY },
-    //       },
-    //     ],
-    //   },
-    // },
     {
-      resolve: "./src/modules/taxcode",
+      resolve: "@medusajs/medusa/tax",
+      options: {
+        providers: [
+          {
+            resolve: "./src/modules/taxjar",
+            id: "taxjar",
+            options: { apiKey: process.env.TAXJAR_API_KEY },
+          },
+        ],
+        dependencies: [Modules.PRODUCT],
+      },
+    },
+    {
+      resolve: "./src/modules/tax_code",
       options: {
         providers: [
           {

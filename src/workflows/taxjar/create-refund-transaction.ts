@@ -7,6 +7,7 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows";
 import TaxjarTaxModuleProvider from "../../modules/taxjar/service";
 import { CreateRefundParams, LineItem } from "taxjar/dist/types/paramTypes";
 import { createRefundStep } from "./steps/create-refund";
+import { PaymentSessionStatus } from "@medusajs/framework/utils";
 
 type WorkflowInput = {
   id: string;
@@ -65,26 +66,10 @@ export const createRefundTransactionWorkflow = createWorkflow(
     const transactionInput = transform(
       { paymentCollections },
       ({ paymentCollections }) => {
-        const providerId = `tp_${TaxjarTaxModuleProvider.identifier}_taxjar`;
         const [paymentCollection] = paymentCollections;
         const { order } = paymentCollection;
-        const [payment] = paymentCollection.payments;
 
-        const refunds = payment?.refunds.sort((a, b) => {
-          if (!a || !b) return 0;
-          if (
-            typeof a.created_at !== "string" ||
-            typeof b.created_at !== "string"
-          )
-            return 0;
-          return a.created_at.localeCompare(b.created_at);
-        });
-
-        if (!order) return {};
-
-        if (!refunds || !refunds[0]) return {};
-
-        const [refund] = refunds;
+        const refund = paymentCollection.payments?.[0]?.refunds?.[0];
 
         const lineItems = order?.items?.map((item) => {
           return {
@@ -99,10 +84,9 @@ export const createRefundTransactionWorkflow = createWorkflow(
             sales_tax: item?.tax_total ?? 0,
           } satisfies LineItem;
         });
-
         const input: CreateRefundParams = {
-          transaction_id: refund.id ?? "",
-          transaction_reference_id: order.id ?? "",
+          transaction_id: refund?.id ?? "",
+          transaction_reference_id: order?.id ?? "",
           transaction_date:
             refund && typeof refund.created_at === "string"
               ? refund.created_at

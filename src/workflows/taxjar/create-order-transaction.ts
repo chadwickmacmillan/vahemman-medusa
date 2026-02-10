@@ -62,7 +62,6 @@ export const createOrderTransactionWorkflow = createWorkflow(
 
     const transactionInput = transform({ orders }, ({ orders }) => {
       const [order] = orders;
-      const providerId = `tp_${TaxjarTaxModuleProvider.identifier}_taxjar`;
       const lineItems = order?.items?.map((item) => {
         return {
           id: item?.id ?? "",

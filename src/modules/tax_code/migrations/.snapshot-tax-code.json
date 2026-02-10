@@ -35,8 +35,8 @@
           "default": "''",
           "mappedType": "text"
         },
-        "tax_code": {
-          "name": "tax_code",
+        "code": {
+          "name": "code",
           "type": "text",
           "unsigned": false,
           "autoincrement": false,
@@ -81,13 +81,13 @@
       "schema": "public",
       "indexes": [
         {
-          "keyName": "IDX_tax_code_tax_code_unique",
+          "keyName": "IDX_tax_code_code_unique",
           "columnNames": [],
           "composite": false,
           "constraint": false,
           "primary": false,
           "unique": false,
-          "expression": "CREATE UNIQUE INDEX IF NOT EXISTS \"IDX_tax_code_tax_code_unique\" ON \"tax_code\" (\"tax_code\") WHERE deleted_at IS NULL"
+          "expression": "CREATE UNIQUE INDEX IF NOT EXISTS \"IDX_tax_code_code_unique\" ON \"tax_code\" (\"code\") WHERE deleted_at IS NULL"
         },
         {
           "keyName": "IDX_tax_code_deleted_at",

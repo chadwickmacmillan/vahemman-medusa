@@ -38,6 +38,7 @@
     "react-router-dom": "^7.13.0",
     "resend": "^6.9.1",
     "sanity": "^5.7.0",
+    "shipstation-node": "^1.5.8",
     "taxjar": "^4.1.0"
   },
   "devDependencies": {

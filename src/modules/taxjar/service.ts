@@ -19,6 +19,7 @@ import {
   UpdateOrderParams,
   UpdateRefundParams,
 } from "taxjar/dist/types/paramTypes";
+import { ProductDTOWithTaxCode } from "../tax_code/types";
 
 type InjectedDependencies = {
   logger: Logger;
@@ -122,7 +123,6 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
           };
         }
       );
-
       return [...itemTaxLines, ...shippingTaxLines];
     } catch (error) {
       throw new MedusaError(
@@ -241,7 +241,8 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
     if (!result.categories) {
       return this?.defaultTaxCode ?? "";
     }
-    return result.categories[0].tax_code?.code || this?.defaultTaxCode || "";
+    const category = result.categories[0] as unknown as ProductDTOWithTaxCode;
+    return category.tax_code?.code || this?.defaultTaxCode || "";
   }
 }
 

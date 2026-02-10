@@ -1,7 +1,7 @@
 import { ExecArgs } from "@medusajs/framework/types";
 import { logger } from "@medusajs/framework";
-import TaxCodeService from "../modules/taxcode/service";
-import { TAX_CODE_SERVICE } from "../modules/taxcode";
+import TaxCodeService from "../modules/tax_code/service";
+import { TAX_CODE_SERVICE } from "../modules/tax_code";
 import Taxjar from "taxjar";
 import { MedusaError, MedusaErrorTypes } from "@medusajs/framework/utils";
 

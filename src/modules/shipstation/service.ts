@@ -96,25 +96,21 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
 
     const packageWeight = items.reduce((sum, item) => {
       // @ts-ignore
-
       return sum + (item.variant.weight || 0);
     }, 0);
 
     const packageLength = items.reduce((acc, item) => {
       // @ts-ignore
-
       return Math.max(acc, item.variant.length || 0);
     }, 0);
 
     const packageWidth = items.reduce((acc, item) => {
       // @ts-ignore
-
       return Math.max(acc, item.variant.width || 0);
     }, 0);
 
     const packageHeight = items.reduce((sum, item) => {
       // @ts-ignore
-
       return sum + (item.variant.height || 0);
     }, 0);
 
@@ -198,7 +194,6 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
       rate = shipment.rate_response.rates[0];
     } else {
       const rateResponse = await this.client.getShipmentRates(shipment_id);
-
       rate = rateResponse[0].rates[0];
     }
 
@@ -212,7 +207,6 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
 
     return {
       calculated_amount: calculatedPrice,
-
       is_calculated_price_tax_inclusive: !!rate?.tax_amount,
     };
   }
