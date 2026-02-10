@@ -80,6 +80,8 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
         return (acc += Number(l.shipping_line.unit_price?.toString()));
       }, 0);
 
+      console.log(context.address.province_code, "province code");
+
       const { tax } = await this.client.taxForOrder({
         to_country: context.address.country_code ?? "",
         to_zip: context.address.postal_code ?? "",
