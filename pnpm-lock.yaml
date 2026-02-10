@@ -11,15 +11,27 @@ importers:
       '@medusajs/admin-sdk':
         specifier: 2.13.1
         version: 2.13.1
+      '@medusajs/admin-shared':
+        specifier: ^2.13.1
+        version: 2.13.1
       '@medusajs/cli':
         specifier: 2.13.1
         version: 2.13.1(@types/node@25.2.3)
+      '@medusajs/dashboard':
+        specifier: ^2.13.1
+        version: 2.13.1(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.3(@types/react@19.2.13))(@types/react@19.2.13)(typescript@5.9.3)
+      '@medusajs/draft-order':
+        specifier: ^2.13.1
+        version: 2.13.1(@medusajs/admin-sdk@2.13.1)(@medusajs/cli@2.13.1(@types/node@25.2.3))(@medusajs/framework@2.13.1(@medusajs/cli@2.13.1(@types/node@25.2.3))(@types/node@25.2.3)(ioredis@5.9.2)(vite@7.3.1(@types/node@25.2.3)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.2))(zod@4.3.6))(@medusajs/icons@2.13.1(react@19.2.4))(@medusajs/test-utils@2.13.1)(@medusajs/ui@4.1.1(@types/react-dom@19.2.3(@types/react@19.2.13))(@types/react@19.2.13)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(@types/react-dom@19.2.3(@types/react@19.2.13))(@types/react@19.2.13)(react-dom@19.2.4(react@19.2.4))(react-router-dom@7.13.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
       '@medusajs/framework':
         specifier: 2.13.1
         version: 2.13.1(@medusajs/cli@2.13.1(@types/node@25.2.3))(@types/node@25.2.3)(ioredis@5.9.2)(vite@7.3.1(@types/node@25.2.3)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.2))(zod@4.3.6)
       '@medusajs/icons':
         specifier: ^2.13.1
         version: 2.13.1(react@19.2.4)
+      '@medusajs/js-sdk':
+        specifier: ^2.13.1
+        version: 2.13.1
       '@medusajs/medusa':
         specifier: 2.13.1
         version: 2.13.1(@emotion/is-prop-valid@1.4.0)(@medusajs/admin-sdk@2.13.1)(@medusajs/cli@2.13.1(@types/node@25.2.3))(@medusajs/framework@2.13.1(@medusajs/cli@2.13.1(@types/node@25.2.3))(@types/node@25.2.3)(ioredis@5.9.2)(vite@7.3.1(@types/node@25.2.3)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.2))(zod@4.3.6))(@medusajs/icons@2.13.1(react@19.2.4))(@medusajs/test-utils@2.13.1)(@medusajs/ui@4.1.1(@types/react-dom@19.2.3(@types/react@19.2.13))(@types/react@19.2.13)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(@swc/core@1.15.11(@swc/helpers@0.5.18))(@types/node@25.2.3)(@types/react-dom@19.2.3(@types/react@19.2.13))(@types/react@19.2.13)(awilix@8.0.1)(picomatch@4.0.3)(posthog-node@5.24.14)(react-dom@19.2.4(react@19.2.4))(react-router-dom@7.13.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(tsx@4.21.0)(typescript@5.9.3)(yalc@1.0.0-pre.53)(yaml@2.8.2)
@@ -38,6 +50,9 @@ importers:
       '@sanity/client':
         specifier: ^7.14.1
         version: 7.14.1(debug@4.4.3)
+      '@tanstack/react-query':
+        specifier: ^5.90.20
+        version: 5.90.20(react@19.2.4)
       avatax:
         specifier: ^26.2.0
         version: 26.2.0
@@ -5339,8 +5354,16 @@ packages:
   '@tanstack/query-core@5.64.2':
     resolution: {integrity: sha512-hdO8SZpWXoADNTWXV9We8CwTkXU88OVWRBcsiFrk7xJQnhm6WRlweDzMD+uH+GnuieTBVSML6xFa17C2cNV8+g==}
 
+  '@tanstack/query-core@5.90.20':
+    resolution: {integrity: sha512-OMD2HLpNouXEfZJWcKeVKUgQ5n+n3A2JFmBaScpNDUqSrQSjiveC7dKMe53uJUg1nDG16ttFPz2xfilz6i2uVg==}
+
   '@tanstack/react-query@5.64.2':
     resolution: {integrity: sha512-3pakNscZNm8KJkxmovvtZ4RaXLyiYYobwleTMvpIGUoKRa8j8VlrQKNl5W8VUEfVfZKkikvXVddLuWMbcSCA1Q==}
+    peerDependencies:
+      react: ^18 || ^19
+
+  '@tanstack/react-query@5.90.20':
+    resolution: {integrity: sha512-vXBxa+qeyveVO7OA0jX1z+DeyCA4JKnThKv411jd5SORpBKgkcVnYKCiBgECvADvniBX7tobwBmg01qq9JmMJw==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -12855,13 +12878,13 @@ snapshots:
       protobufjs: 7.5.4
       yargs: 17.7.2
 
-  '@hookform/error-message@2.0.1(react-dom@18.3.1(react@18.3.1))(react-hook-form@7.49.1(react@18.3.1))(react@18.3.1)':
+  '@hookform/error-message@2.0.1(react-dom@18.3.1(react@18.3.1))(react-hook-form@7.49.1(react@19.2.4))(react@18.3.1)':
     dependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       react-hook-form: 7.49.1(react@19.2.4)
 
-  '@hookform/resolvers@3.4.2(react-hook-form@7.49.1(react@18.3.1))':
+  '@hookform/resolvers@3.4.2(react-hook-form@7.49.1(react@19.2.4))':
     dependencies:
       react-hook-form: 7.49.1(react@19.2.4)
 
@@ -13479,8 +13502,8 @@ snapshots:
       '@dnd-kit/core': 6.3.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@dnd-kit/sortable': 8.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@18.3.1)
       '@dnd-kit/utilities': 3.2.2(react@18.3.1)
-      '@hookform/error-message': 2.0.1(react-dom@18.3.1(react@18.3.1))(react-hook-form@7.49.1(react@18.3.1))(react@18.3.1)
-      '@hookform/resolvers': 3.4.2(react-hook-form@7.49.1(react@18.3.1))
+      '@hookform/error-message': 2.0.1(react-dom@18.3.1(react@18.3.1))(react-hook-form@7.49.1(react@19.2.4))(react@18.3.1)
+      '@hookform/resolvers': 3.4.2(react-hook-form@7.49.1(react@19.2.4))
       '@medusajs/admin-shared': 2.13.1
       '@medusajs/icons': 2.13.1(react@18.3.1)
       '@medusajs/js-sdk': 2.13.1
@@ -13508,7 +13531,7 @@ snapshots:
       react-currency-input-field: 3.10.0(react@18.3.1)
       react-dom: 18.3.1(react@18.3.1)
       react-helmet-async: 2.0.5(react@18.3.1)
-      react-hook-form: 7.49.1(react@19.2.4)
+      react-hook-form: 7.49.1(react@18.3.1)
       react-i18next: 13.5.0(i18next@23.7.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-jwt: 1.3.0(react@18.3.1)
       react-router-dom: 6.30.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -13552,7 +13575,7 @@ snapshots:
     dependencies:
       '@ariakit/react': 0.4.21(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@babel/runtime': 7.28.6
-      '@hookform/resolvers': 3.4.2(react-hook-form@7.49.1(react@18.3.1))
+      '@hookform/resolvers': 3.4.2(react-hook-form@7.49.1(react@19.2.4))
       '@medusajs/framework': 2.13.1(@medusajs/cli@2.13.1(@types/node@25.2.3))(@types/node@25.2.3)(ioredis@5.9.2)(vite@7.3.1(@types/node@25.2.3)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.2))(zod@4.3.6)
       '@medusajs/js-sdk': 2.13.1
       '@tanstack/react-query': 5.64.2(react@19.2.4)
@@ -19688,6 +19711,8 @@ snapshots:
 
   '@tanstack/query-core@5.64.2': {}
 
+  '@tanstack/query-core@5.90.20': {}
+
   '@tanstack/react-query@5.64.2(react@18.3.1)':
     dependencies:
       '@tanstack/query-core': 5.64.2
@@ -19696,6 +19721,11 @@ snapshots:
   '@tanstack/react-query@5.64.2(react@19.2.4)':
     dependencies:
       '@tanstack/query-core': 5.64.2
+      react: 19.2.4
+
+  '@tanstack/react-query@5.90.20(react@19.2.4)':
+    dependencies:
+      '@tanstack/query-core': 5.90.20
       react: 19.2.4
 
   '@tanstack/react-table@8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
@@ -24153,6 +24183,10 @@ snapshots:
       react: 18.3.1
       react-fast-compare: 3.2.2
       shallowequal: 1.1.0
+
+  react-hook-form@7.49.1(react@18.3.1):
+    dependencies:
+      react: 18.3.1
 
   react-hook-form@7.49.1(react@19.2.4):
     dependencies:
