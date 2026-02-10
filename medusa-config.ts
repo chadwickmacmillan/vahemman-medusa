@@ -170,7 +170,6 @@ module.exports = defineConfig({
             resolve: "./src/modules/taxjar",
             id: "taxjar",
             options: { apiKey: process.env.TAXJAR_API_KEY },
-            dependencies: [Modules.PRODUCT],
           },
         ],
         dependencies: [Modules.PRODUCT],
