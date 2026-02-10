@@ -1,5 +1,5 @@
 import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk";
-import TaxjarTaxModuleProvider from "../../../modules/taxjar/service";
+import TaxjarTaxModuleProvider from "../../../providers/taxjar/service";
 import { CreateRefundParams } from "taxjar/dist/types/paramTypes";
 
 type StepInput = CreateRefundParams;

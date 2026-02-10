@@ -7,7 +7,7 @@ import {
   updateOrderWorkflow,
   useQueryGraphStep,
 } from "@medusajs/medusa/core-flows";
-import TaxjarTaxModuleProvider from "../../modules/taxjar/service";
+import TaxjarTaxModuleProvider from "../../providers/taxjar/service";
 import { createTransactionStep } from "./steps/create-transaction";
 import { CreateOrderParams, LineItem } from "taxjar/dist/types/paramTypes";
 
