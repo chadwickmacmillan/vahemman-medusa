@@ -171,8 +171,8 @@ module.exports = defineConfig({
             options: { apiKey: process.env.TAXJAR_API_KEY },
           },
         ],
-        dependencies: [Modules.PRODUCT],
       },
+      dependencies: [Modules.PRODUCT],
     },
     {
       resolve: "./src/modules/tax_code",
