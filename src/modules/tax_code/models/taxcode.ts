@@ -1,4 +1,4 @@
-import { model } from "@medusajs/utils";
+import { model } from "@medusajs/framework/utils";
 
 const TaxCode = model.define("tax_code", {
   id: model.id().primaryKey(),
