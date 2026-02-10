@@ -5,8 +5,6 @@
     "buildCommand": "pnpm build"
   },
   "deploy": {
-    "preDeployCommand": [
-      "cd .medusa/server && pnpm install && pnpm predeploy && pnpm start"
-    ]
+    "startCommand": "cd .medusa/server && pnpm install && pnpm predeploy && pnpm start"
   }
 }
