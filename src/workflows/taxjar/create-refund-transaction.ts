@@ -4,7 +4,7 @@ import {
   WorkflowResponse,
 } from "@medusajs/framework/workflows-sdk";
 import { useQueryGraphStep } from "@medusajs/medusa/core-flows";
-import TaxjarTaxModuleProvider from "../../providers/taxjar/service";
+import TaxjarTaxModuleProvider from "../../modules/taxjar/service";
 import { CreateRefundParams, LineItem } from "taxjar/dist/types/paramTypes";
 import { createRefundStep } from "./steps/create-refund";
 import { PaymentSessionStatus } from "@medusajs/framework/utils";
