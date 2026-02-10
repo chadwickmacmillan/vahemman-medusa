@@ -1,6 +1,5 @@
 import { loadEnv, defineConfig } from "@medusajs/framework/utils";
 import { Modules } from "@medusajs/framework/utils";
-import { Context, OrderTypes } from "@medusajs/framework/types";
 
 loadEnv(process.env.NODE_ENV || "development", process.cwd());
 
@@ -171,9 +170,9 @@ module.exports = defineConfig({
             resolve: "./src/modules/taxjar",
             id: "taxjar",
             options: { apiKey: process.env.TAXJAR_API_KEY },
+            dependencies: [Modules.PRODUCT],
           },
         ],
-        dependencies: [Modules.PRODUCT],
       },
     },
     {
