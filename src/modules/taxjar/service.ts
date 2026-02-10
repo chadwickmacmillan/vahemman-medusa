@@ -23,7 +23,7 @@ import { ProductDTOWithTaxCode } from "../tax_code/types";
 
 type InjectedDependencies = {
   logger: Logger;
-  [Modules.PRODUCT]: IProductModuleService;
+  productService: IProductModuleService;
 };
 
 class TaxjarTaxModuleProvider implements ITaxProvider {
@@ -35,7 +35,7 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
   protected productService_: IProductModuleService;
 
   constructor(
-    { product, logger }: InjectedDependencies,
+    { productService, logger }: InjectedDependencies,
     options: ModuleOptions
   ) {
     if (!options.apiKey) {
@@ -46,7 +46,7 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
     }
     this.logger_ = logger;
     this.options_ = options;
-    this.productService_ = product;
+    this.productService_ = productService;
 
     this.client = new Taxjar(options);
     this.defaultTaxCode = options?.defaultTaxCode;
