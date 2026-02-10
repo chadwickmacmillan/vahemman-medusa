@@ -23,7 +23,7 @@ import { ProductDTOWithTaxCode } from "../tax_code/types";
 
 type InjectedDependencies = {
   logger: Logger;
-  // [Modules.PRODUCT]: IProductModuleService;
+  [Modules.PRODUCT]: IProductModuleService;
 };
 
 class TaxjarTaxModuleProvider implements ITaxProvider {
@@ -32,10 +32,10 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
   protected options_: ModuleOptions;
   protected client: Taxjar;
   protected defaultTaxCode?: string;
-  // protected productService_: IProductModuleService;
+  protected productService_: IProductModuleService;
 
   constructor(
-    { /*product,*/ logger }: InjectedDependencies,
+    { product, logger }: InjectedDependencies,
     options: ModuleOptions
   ) {
     if (!options.apiKey) {
@@ -46,7 +46,7 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
     }
     this.logger_ = logger;
     this.options_ = options;
-    // this.productService_ = product;
+    this.productService_ = product;
 
     this.client = new Taxjar(options);
     this.defaultTaxCode = options?.defaultTaxCode;
@@ -234,16 +234,16 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
       );
     }
   }
-  // private async getProductTaxCode(productId: string) {
-  //   const result = await this.productService_.retrieveProduct(productId, {
-  //     relations: ["categories"],
-  //   });
-  //   if (!result.categories) {
-  //     return this?.defaultTaxCode ?? "";
-  //   }
-  //   const category = result.categories[0] as unknown as ProductDTOWithTaxCode;
-  //   return category.tax_code?.code || this?.defaultTaxCode || "";
-  // }
+  private async getProductTaxCode(productId: string) {
+    const result = await this.productService_.retrieveProduct(productId, {
+      relations: ["categories"],
+    });
+    if (!result.categories) {
+      return this?.defaultTaxCode ?? "";
+    }
+    const category = result.categories[0] as unknown as ProductDTOWithTaxCode;
+    return category.tax_code?.code || this?.defaultTaxCode || "";
+  }
 }
 
 export default TaxjarTaxModuleProvider;
