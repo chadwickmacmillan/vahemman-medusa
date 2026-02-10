@@ -64,14 +64,14 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
     try {
       const taxLineItems: TaxLineItem[] = await Promise.all(
         itemLines.map(async (line) => {
-          // const productTaxCode = await this.getProductTaxCode(
-          //   line.line_item.product_id
-          // );
+          const productTaxCode = await this.getProductTaxCode(
+            line.line_item.product_id
+          );
           return {
             id: line.line_item.id,
             quantity: Number(line.line_item.quantity?.toString()),
             unit_price: Number(line.line_item.unit_price?.toString()),
-            product_tax_code: /*productTaxCode,*/ "",
+            product_tax_code: productTaxCode,
           };
         })
       );
@@ -81,14 +81,14 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
       }, 0);
 
       const { tax } = await this.client.taxForOrder({
-        to_country: context.address.country_code,
-        to_zip: context.address.postal_code,
-        to_state: context.address.province_code ?? undefined,
-        to_city: context.address.city,
-        to_street: context.address.address_1,
+        to_country: context.address.country_code ?? "",
+        to_zip: context.address.postal_code ?? "",
+        to_state: context.address.province_code ?? "",
+        to_city: context.address.city ?? "",
+        to_street: context.address.address_1 ?? "",
         shipping,
         line_items: taxLineItems,
-        customer_id: context.customer?.id,
+        customer_id: context.customer?.id ?? "",
       });
 
       if (!tax.breakdown) {
