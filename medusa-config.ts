@@ -151,7 +151,6 @@ module.exports = defineConfig({
       resolve: "./src/modules/sanity",
       options: {
         api_token: process.env.SANITY_API_TOKEN,
-
         project_id: process.env.SANITY_PROJECT_ID,
         api_version: new Date().toISOString().split("T")[0],
         dataset: "production",

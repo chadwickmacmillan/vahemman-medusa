@@ -9,7 +9,7 @@ import {
   IProductModuleService,
 } from "@medusajs/framework/types";
 import Taxjar from "taxjar";
-import { MedusaError } from "@medusajs/framework/utils";
+import { MedusaError, Modules } from "@medusajs/framework/utils";
 import { ModuleOptions } from "./types";
 import { Logger } from "@medusajs/medusa";
 import {
@@ -19,9 +19,11 @@ import {
   UpdateOrderParams,
   UpdateRefundParams,
 } from "taxjar/dist/types/paramTypes";
+import { ProductDTOWithTaxCode } from "../tax_code/types";
 
 type InjectedDependencies = {
   logger: Logger;
+  // [Modules.PRODUCT]: IProductModuleService;
 };
 
 class TaxjarTaxModuleProvider implements ITaxProvider {
@@ -30,8 +32,12 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
   protected options_: ModuleOptions;
   protected client: Taxjar;
   protected defaultTaxCode?: string;
+  // protected productService_: IProductModuleService;
 
-  constructor({ logger }: InjectedDependencies, options: ModuleOptions) {
+  constructor(
+    { /*product,*/ logger }: InjectedDependencies,
+    options: ModuleOptions
+  ) {
     if (!options.apiKey) {
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
@@ -40,6 +46,7 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
     }
     this.logger_ = logger;
     this.options_ = options;
+    // this.productService_ = product;
 
     this.client = new Taxjar(options);
     this.defaultTaxCode = options?.defaultTaxCode;
@@ -57,11 +64,14 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
     try {
       const taxLineItems: TaxLineItem[] = await Promise.all(
         itemLines.map(async (line) => {
+          // const productTaxCode = await this.getProductTaxCode(
+          //   line.line_item.product_id
+          // );
           return {
             id: line.line_item.id,
             quantity: Number(line.line_item.quantity?.toString()),
             unit_price: Number(line.line_item.unit_price?.toString()),
-            product_tax_code: "",
+            product_tax_code: /*productTaxCode,*/ "",
           };
         })
       );
@@ -224,6 +234,16 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
       );
     }
   }
+  // private async getProductTaxCode(productId: string) {
+  //   const result = await this.productService_.retrieveProduct(productId, {
+  //     relations: ["categories"],
+  //   });
+  //   if (!result.categories) {
+  //     return this?.defaultTaxCode ?? "";
+  //   }
+  //   const category = result.categories[0] as unknown as ProductDTOWithTaxCode;
+  //   return category.tax_code?.code || this?.defaultTaxCode || "";
+  // }
 }
 
 export default TaxjarTaxModuleProvider;
