@@ -90,15 +90,15 @@ const AssignCategoryTaxCodeModal = ({
                 </Select.Content>
               </Select>
             </div>
+            <Container className="pt-4">
+              <SectionRow title="Code" value={selectedTaxCode?.code ?? "-"} />
+              <SectionRow title="Name" value={selectedTaxCode?.name ?? "-"} />
+              <SectionRow
+                title="Description"
+                value={selectedTaxCode?.description ?? "-"}
+              />
+            </Container>
           </div>
-          <Container>
-            <SectionRow title="Code" value={selectedTaxCode?.code ?? "-"} />
-            <SectionRow title="Name" value={selectedTaxCode?.name ?? "-"} />
-            <SectionRow
-              title="Description"
-              value={selectedTaxCode?.description ?? "-"}
-            />
-          </Container>
         </FocusModal.Body>
         <FocusModal.Footer>
           <Button onClick={save}>Save</Button>
