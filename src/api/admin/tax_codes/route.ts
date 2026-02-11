@@ -5,6 +5,11 @@ import { TAX_CODE_SERVICE } from "../../../modules/tax_code";
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const service = req.scope.resolve(TAX_CODE_SERVICE) as TaxCodeService;
 
-  const data = await service.listTaxCodes();
+  const data = await service.listTaxCodes(
+    {},
+    {
+      order: { name: "ASC" },
+    }
+  );
   res.json({ tax_codes: data });
 }
