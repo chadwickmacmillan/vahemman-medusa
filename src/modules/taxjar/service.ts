@@ -61,8 +61,10 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
     shippingLines: ShippingTaxCalculationLine[],
     context: TaxCalculationContext
   ): Promise<(ItemTaxLineDTO | ShippingTaxLineDTO)[]> {
+    if (itemLines.length === 0) {
+      return [];
+    }
     try {
-      console.log("HI");
       const taxLineItems: TaxLineItem[] = await Promise.all(
         itemLines.map(async (line) => {
           const productTaxCode = await this.getProductTaxCode(
@@ -76,8 +78,6 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
           };
         })
       );
-
-      if (taxLineItems.length < 1) return [];
 
       const shipping = shippingLines.reduce((acc, l) => {
         return (acc += Number(l.shipping_line.unit_price?.toString()));
