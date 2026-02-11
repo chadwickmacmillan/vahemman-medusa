@@ -1,7 +1,7 @@
-import { Button, Container, FocusModal, Select } from "@medusajs/ui";
+import { Button, Container, FocusModal, Select, toast } from "@medusajs/ui";
 
 import { SectionRow } from "./SectionRow";
-import { useTaxCodes } from "../hooks/taxcode";
+import { useTaxCodes, useTriggerTaxCodeProductSave } from "../hooks/taxcode";
 import { useState } from "react";
 
 type TaxCode = {
@@ -15,27 +15,41 @@ type Props = {
   isOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   taxCode?: TaxCode;
-  categoryId?: string;
+  productId: string;
 };
 
 const AssignCategoryTaxCodeModal = ({
   isOpen,
   onOpenChange,
   taxCode,
-  categoryId,
+  productId,
 }: Props) => {
-  const save = () => {
-    onOpenChange?.(false);
-  };
-  const { taxCodes } = useTaxCodes();
+  const { tax_codes } = useTaxCodes();
 
   const [selectedValue, setSelectedValue] = useState(
-    () => taxCode?.id ?? taxCodes[0].id
+    () => taxCode?.id ?? tax_codes?.[0]?.id ?? ""
   );
 
-  const selectedTaxCode = taxCodes.find(
+  const selectedTaxCode = tax_codes?.find(
     (taxCode) => taxCode.id === selectedValue
   );
+
+  const { mutateAsync } = useTriggerTaxCodeProductSave(
+    productId,
+    selectedValue
+  );
+
+  const save = async () => {
+    try {
+      await mutateAsync();
+      toast.success(`Assigned tax code to product`);
+      onOpenChange?.(false);
+    } catch (err) {
+      toast.error(
+        `Couldn't trigger sync: ${(err as Record<string, unknown>).message}`
+      );
+    }
+  };
 
   return (
     <FocusModal open={isOpen} onOpenChange={onOpenChange}>
@@ -48,7 +62,7 @@ const AssignCategoryTaxCodeModal = ({
             <Select.Value placeholder="Name" />
           </Select.Trigger>
           <Select.Content>
-            {taxCodes.map((taxCode) => (
+            {tax_codes?.map((taxCode) => (
               <Select.Item key={taxCode.id} value={taxCode.id}>
                 {taxCode.name}
               </Select.Item>

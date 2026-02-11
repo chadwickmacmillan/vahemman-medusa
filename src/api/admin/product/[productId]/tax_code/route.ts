@@ -7,16 +7,17 @@ import {
 } from "@medusajs/framework/utils";
 import { AssignTaxCode } from "../../../validators";
 import { TAX_CODE_SERVICE } from "../../../../../modules/tax_code";
+import { TaxCode } from "../../../../../modules/tax_code/types";
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
-  const categoryId = req.params.categoryId;
+  const productId = req.params.productId;
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const { data } = await query.graph({
-    entity: "product_category",
+    entity: "product",
     fields: ["tax_code.*"],
     filters: {
-      id: categoryId,
+      id: productId,
     },
   });
 
@@ -30,27 +31,27 @@ export async function POST(
   req: MedusaRequest<AssignTaxCode>,
   res: MedusaResponse
 ) {
-  const categoryId = req.params.categoryId;
+  const productId = req.params.productId;
 
-  const remoteLink = req.scope.resolve(ContainerRegistrationKeys.REMOTE_LINK);
+  const link = req.scope.resolve(ContainerRegistrationKeys.LINK);
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const { data } = await query.graph({
-    entity: "product_category",
+    entity: "product",
     fields: ["tax_code.*"],
     filters: {
-      id: categoryId,
+      id: productId,
     },
   });
 
   if (data.length === 0) {
-    throw new MedusaError(MedusaErrorTypes.NOT_FOUND, "Category not found!");
+    throw new MedusaError(MedusaErrorTypes.NOT_FOUND, "Product not found!");
   }
 
   if (data[0].tax_code) {
-    await remoteLink.dismiss({
+    await link.dismiss({
       [Modules.PRODUCT]: {
-        product_category_id: categoryId,
+        product_id: productId,
       },
       [TAX_CODE_SERVICE]: {
         tax_code_id: data[0].tax_code.id,
@@ -58,9 +59,9 @@ export async function POST(
     });
   }
 
-  await remoteLink.create({
+  await link.create({
     [Modules.PRODUCT]: {
-      product_category_id: categoryId,
+      product_id: productId,
     },
     [TAX_CODE_SERVICE]: {
       tax_code_id: req.body.taxCodeId,

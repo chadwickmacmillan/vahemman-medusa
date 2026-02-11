@@ -1,7 +1,17 @@
-import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
+import {
+  MutationFunctionContext,
+  QueryKey,
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  useQueryClient,
+  UseQueryOptions,
+} from "@tanstack/react-query";
 
 import { FetchError } from "@medusajs/js-sdk";
 import { sdk } from "../lib/sdk";
+
+import { TaxCode } from "../../modules/tax_code/types";
 
 export const useTaxCode = (
   id: string,
@@ -10,7 +20,7 @@ export const useTaxCode = (
     UseQueryOptions<
       Record<any, any>,
       FetchError,
-      { sanity_document: Record<any, any>; studio_url: string },
+      { tax_code: TaxCode },
       QueryKey
     >,
     "queryKey" | "queryFn"
@@ -18,7 +28,7 @@ export const useTaxCode = (
 ) => {
   const fetchTaxCode = async (query?: Record<any, any>) => {
     return await sdk.client.fetch<Record<any, any>>(
-      `/admin/category/${id}/taxcode`,
+      `/admin/product/${id}/tax_code`,
       {
         query,
       }
@@ -27,31 +37,12 @@ export const useTaxCode = (
 
   const { data, ...rest } = useQuery({
     queryFn: async () => fetchTaxCode(query),
-    queryKey: [`taxcode_${id}`],
+    queryKey: [`tax_code_product_${id}`],
     ...options,
   });
 
   return { ...data, ...rest };
 };
-
-// export const useTriggerSanitySync = (options?: UseMutationOptions) => {
-//   const queryClient = useQueryClient();
-
-//   return useMutation({
-//     mutationFn: () =>
-//       sdk.client.fetch(`/admin/sanity/syncs`, {
-//         method: "post",
-//       }),
-//     onSuccess: (data: any, variables: any, context: any) => {
-//       queryClient.invalidateQueries({
-//         queryKey: [`sanity_sync`],
-//       });
-
-//       options?.onSuccess?.(data, variables, context);
-//     },
-//     ...options,
-//   });
-// };
 
 export const useTaxCodes = (
   query?: Record<any, any>,
@@ -59,23 +50,52 @@ export const useTaxCodes = (
     UseQueryOptions<
       Record<any, any>,
       FetchError,
-      { sanity_document: Record<any, any>; studio_url: string },
+      { tax_codes: TaxCode[] },
       QueryKey
     >,
     "queryKey" | "queryFn"
   >
 ) => {
   const fetchTaxCodes = async (query?: Record<any, any>) => {
-    return await sdk.client.fetch<Record<any, any>>(`/admin/taxcodes`, {
+    return await sdk.client.fetch<Record<any, any>>(`/admin/tax_codes`, {
       query,
     });
   };
 
   const { data, ...rest } = useQuery({
     queryFn: async () => fetchTaxCodes(query),
-    queryKey: [`taxcodes`],
+    queryKey: [`tax_codes`],
     ...options,
   });
 
   return { ...data, ...rest };
+};
+
+export const useTriggerTaxCodeProductSave = (
+  productId: string,
+  taxCodeId: string,
+  options?: UseMutationOptions
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () =>
+      sdk.client.fetch(`/admin/product/${productId}/tax_code`, {
+        method: "post",
+        body: { taxCodeId },
+      }),
+    onSuccess: (
+      data: unknown,
+      variables: void,
+      onMutateResult: unknown,
+      context: MutationFunctionContext
+    ) => {
+      queryClient.invalidateQueries({
+        queryKey: [`tax_code_product_${productId}`],
+      });
+
+      options?.onSuccess?.(data, variables, onMutateResult, context);
+    },
+    ...options,
+  });
 };

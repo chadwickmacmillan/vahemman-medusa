@@ -11,7 +11,7 @@ import AssignCategoryTaxCodeModal from "../components/AssignCategoryTaxCodeModal
 
 const TaxCodeWidget = ({ data }: DetailWidgetProps<AdminProductCategory>) => {
   const [editMode, setEditMode] = useState(false);
-  const { taxCode } = useTaxCode(data.id);
+  const { tax_code } = useTaxCode(data.id);
 
   return (
     <>
@@ -29,11 +29,11 @@ const TaxCodeWidget = ({ data }: DetailWidgetProps<AdminProductCategory>) => {
           </Button>
         </div>
         <div>
-          {taxCode?.code ? (
+          {tax_code?.code ? (
             <>
-              <SectionRow title="Code" value={taxCode.code} />
-              <SectionRow title="Name" value={taxCode.name} />
-              <SectionRow title="Description" value={taxCode.description} />
+              <SectionRow title="Code" value={tax_code.code} />
+              <SectionRow title="Name" value={tax_code.name} />
+              <SectionRow title="Description" value={tax_code.description} />
             </>
           ) : (
             <SectionRow title="Code" value="-" />
@@ -43,14 +43,15 @@ const TaxCodeWidget = ({ data }: DetailWidgetProps<AdminProductCategory>) => {
       <AssignCategoryTaxCodeModal
         isOpen={editMode}
         onOpenChange={(isEnabled) => setEditMode(isEnabled)}
-        taxCode={taxCode}
+        taxCode={tax_code}
+        productId={data.id}
       />
     </>
   );
 };
 
 export const config = defineWidgetConfig({
-  zone: "product_category.details.after",
+  zone: "product.details.after",
 });
 
 export default TaxCodeWidget;
