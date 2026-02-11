@@ -56,9 +56,10 @@ export const useTaxCodes = (
   >
 ) => {
   const fetchTaxCodes = async (query?: Record<any, any>) => {
-    return await sdk.client.fetch<Record<any, any>>(`/admin/tax_codes`, {
+    const taxCodes = await sdk.client.fetch<TaxCode[]>(`/admin/tax_codes`, {
       query,
     });
+    return { tax_codes: taxCodes };
   };
 
   const { data, ...rest } = useQuery({

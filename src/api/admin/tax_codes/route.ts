@@ -6,5 +6,5 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const service = req.scope.resolve(TAX_CODE_SERVICE) as TaxCodeService;
 
   const data = await service.listTaxCodes();
-  res.json({ tax_codes: data });
+  res.json(data);
 }
