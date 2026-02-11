@@ -34,10 +34,6 @@ const AssignCategoryTaxCodeModal = ({
 }: Props) => {
   const { tax_codes } = useTaxCodes();
 
-  useEffect(() => {
-    console.log(tax_codes, "tax codes");
-  }, [tax_codes]);
-
   const [selectedValue, setSelectedValue] = useState(
     () => taxCode?.id ?? tax_codes?.[0]?.id ?? ""
   );
