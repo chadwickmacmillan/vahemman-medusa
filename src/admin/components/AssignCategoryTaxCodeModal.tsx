@@ -73,7 +73,7 @@ const AssignCategoryTaxCodeModal = ({
                 Assign US Tax Code to a product from the list below.
               </Text>
             </div>
-            <div className="pt-4 w-40">
+            <div className="pt-4">
               <Select
                 value={selectedValue}
                 onValueChange={(val) => setSelectedValue(val)}
