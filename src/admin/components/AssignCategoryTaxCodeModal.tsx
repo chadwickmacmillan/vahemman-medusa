@@ -42,7 +42,7 @@ const AssignCategoryTaxCodeModal = ({
     (taxCode) => taxCode.id === selectedValue
   );
 
-  const { mutateAsync } = useTriggerTaxCodeProductSave(
+  const { mutateAsync, isPending } = useTriggerTaxCodeProductSave(
     productId,
     selectedValue
   );
@@ -101,7 +101,9 @@ const AssignCategoryTaxCodeModal = ({
           </div>
         </FocusModal.Body>
         <FocusModal.Footer>
-          <Button onClick={save}>Save</Button>
+          <Button onClick={save} isLoading={isPending}>
+            Save
+          </Button>
         </FocusModal.Footer>
       </FocusModal.Content>
     </FocusModal>
