@@ -53,39 +53,41 @@ const AssignCategoryTaxCodeModal = ({
 
   return (
     <FocusModal open={isOpen} onOpenChange={onOpenChange}>
-      <div>
-        <Select
-          value={selectedValue}
-          onValueChange={(val) => setSelectedValue(val)}
-        >
-          <Select.Trigger>
-            <Select.Value placeholder="Name" />
-          </Select.Trigger>
-          <Select.Content>
-            {tax_codes?.map((taxCode) => (
-              <Select.Item key={taxCode.id} value={taxCode.id}>
-                {taxCode.name}
-              </Select.Item>
-            ))}
-          </Select.Content>
-        </Select>
-        <Container>
-          <SectionRow title="Code" value={selectedTaxCode?.code ?? "-"} />
-          <SectionRow title="Name" value={selectedTaxCode?.name ?? "-"} />
-          <SectionRow
-            title="Description"
-            value={selectedTaxCode?.description ?? "-"}
-          />
-          <Button
-            size="small"
-            variant="secondary"
-            onClick={save}
-            disabled={!selectedValue}
-          >
-            Save
-          </Button>
-        </Container>
-      </div>
+      <FocusModal.Content>
+        <FocusModal.Header>
+          <FocusModal.Title>Assign tax code to product</FocusModal.Title>
+        </FocusModal.Header>
+        <FocusModal.Body>
+          <div>
+            <Select
+              value={selectedValue}
+              onValueChange={(val) => setSelectedValue(val)}
+            >
+              <Select.Trigger>
+                <Select.Value placeholder="Name" />
+              </Select.Trigger>
+              <Select.Content>
+                {tax_codes?.map((taxCode) => (
+                  <Select.Item key={taxCode.id} value={taxCode.id}>
+                    {taxCode.name}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select>
+          </div>
+          <Container>
+            <SectionRow title="Code" value={selectedTaxCode?.code ?? "-"} />
+            <SectionRow title="Name" value={selectedTaxCode?.name ?? "-"} />
+            <SectionRow
+              title="Description"
+              value={selectedTaxCode?.description ?? "-"}
+            />
+          </Container>
+        </FocusModal.Body>
+        <FocusModal.Footer>
+          <Button onClick={save}>Save</Button>
+        </FocusModal.Footer>
+      </FocusModal.Content>
     </FocusModal>
   );
 };
