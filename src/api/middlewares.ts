@@ -5,7 +5,7 @@ import { AssignTaxCodeValidator } from "./admin/validators";
 export default defineMiddlewares({
   routes: [
     {
-      matcher: "/admin/category/:categoryId/tax_code",
+      matcher: "/admin/product/:productId/tax_code",
       method: ["POST"],
       middlewares: [validateAndTransformBody(AssignTaxCodeValidator)],
     },
