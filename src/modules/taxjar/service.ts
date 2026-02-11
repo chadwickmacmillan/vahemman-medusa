@@ -62,6 +62,7 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
     context: TaxCalculationContext
   ): Promise<(ItemTaxLineDTO | ShippingTaxLineDTO)[]> {
     try {
+      console.log("HI");
       const taxLineItems: TaxLineItem[] = await Promise.all(
         itemLines.map(async (line) => {
           const productTaxCode = await this.getProductTaxCode(
