@@ -5,6 +5,7 @@ import Taxcode from "../modules/tax_code";
 export default defineLink(
   {
     linkable: ProductModule.linkable.product,
+    isList: true,
   },
   Taxcode.linkable.taxCode
 );
