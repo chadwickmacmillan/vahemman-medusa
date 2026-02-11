@@ -10,7 +10,7 @@ import {
 
 import { SectionRow } from "./SectionRow";
 import { useTaxCodes, useTriggerTaxCodeProductSave } from "../hooks/taxcode";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type TaxCode = {
   id: string;
@@ -33,6 +33,10 @@ const AssignCategoryTaxCodeModal = ({
   productId,
 }: Props) => {
   const { tax_codes } = useTaxCodes();
+
+  useEffect(() => {
+    console.log(tax_codes, "tax codes");
+  }, [tax_codes]);
 
   const [selectedValue, setSelectedValue] = useState(
     () => taxCode?.id ?? tax_codes?.[0]?.id ?? ""
@@ -65,7 +69,7 @@ const AssignCategoryTaxCodeModal = ({
         <FocusModal.Header>
           <FocusModal.Title>Assign Tax Code</FocusModal.Title>
         </FocusModal.Header>
-        <FocusModal.Body>
+        <FocusModal.Body className="flex flex-col items-center py-16">
           <div className="flex w-full max-w-lg flex-col gap-y-8">
             <div className="flex flex-col gap-y-1">
               <Heading>Assign Tax Code</Heading>
@@ -73,7 +77,7 @@ const AssignCategoryTaxCodeModal = ({
                 Assign US Tax Code to a product from the list below.
               </Text>
             </div>
-            <div>
+            <div className="pt-4 w-40">
               <Select
                 value={selectedValue}
                 onValueChange={(val) => setSelectedValue(val)}

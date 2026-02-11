@@ -38,7 +38,6 @@
     "@medusajs/ui-preset": "^2.13.1",
     "@react-email/components": "^1.0.7",
     "@sanity/client": "^7.14.1",
-    "avatax": "^26.2.0",
     "react-email": "^5.2.8",
     "react-router-dom": "^7.13.0",
     "resend": "^6.9.1",

@@ -53,9 +53,6 @@ importers:
       '@sanity/client':
         specifier: ^7.14.1
         version: 7.14.1(debug@4.4.3)
-      avatax:
-        specifier: ^26.2.0
-        version: 26.2.0
       react-email:
         specifier: ^5.2.8
         version: 5.2.8
@@ -5477,9 +5474,6 @@ packages:
   '@types/mute-stream@0.0.4':
     resolution: {integrity: sha512-CPM9nzrCPPJHQNA9keH9CVkVI+WR5kMa+7XEs5jcGQ0VoAGnLv242w8lIVgwAEfmE4oufJRaTc9PNLQl0ioAow==}
 
-  '@types/node-fetch@2.6.13':
-    resolution: {integrity: sha512-QGpRVpzSaUs30JBSGPjOg4Uveu384erbHBoT1zeONvyCfwQxIkUshLAOqN/k9EjGviPRmWTTe6aH2qySWKTVSw==}
-
   '@types/node@22.19.11':
     resolution: {integrity: sha512-BH7YwL6rA93ReqeQS1c4bsPpcfOmJasG+Fkr6Y59q83f9M1WcBRHR2vM+P9eOisYRcN3ujQoiZY8uk5W+1WL8w==}
 
@@ -5915,9 +5909,6 @@ packages:
     hasBin: true
     peerDependencies:
       postcss: ^8.1.0
-
-  avatax@26.2.0:
-    resolution: {integrity: sha512-9lIM+yjW+el2kB4+O8wAMIZ1Cp1hQo/VssnbV3euHLKzzYxskeH6di9En81Fxtl7nAw2x048CVSOisvT/PkDcA==}
 
   awilix@8.0.1:
     resolution: {integrity: sha512-zDSp4R204scvQIDb2GMoWigzXemn0+3AKKIAt543T9v2h7lmoypvkmcx1W/Jet/nm27R1N1AsqrsYVviAR9KrA==}
@@ -7974,9 +7965,6 @@ packages:
 
   json-stringify-safe@5.0.1:
     resolution: {integrity: sha512-ZClg6AaYvamvYEE82d3Iyd3vSSIjQ+odgjaTzRuO3s7toCdFKczob2i0zCh7JE8kWn17yvAWhUVxvqGwUalsRA==}
-
-  json2typescript@1.6.1:
-    resolution: {integrity: sha512-2zSZMfOF/3ygGuzv5d/BBdxKOjNJKPolce/07HuX/xGHjBEi53ux36IuBr7ZM8kLACcD97XmH23snugJDrMOZA==}
 
   json5@2.2.3:
     resolution: {integrity: sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==}
@@ -19856,11 +19844,6 @@ snapshots:
     dependencies:
       '@types/node': 25.2.3
 
-  '@types/node-fetch@2.6.13':
-    dependencies:
-      '@types/node': 25.2.3
-      form-data: 4.0.5
-
   '@types/node@22.19.11':
     dependencies:
       undici-types: 6.21.0
@@ -20278,15 +20261,6 @@ snapshots:
       picocolors: 1.1.1
       postcss: 8.5.6
       postcss-value-parser: 4.2.0
-
-  avatax@26.2.0:
-    dependencies:
-      '@types/node-fetch': 2.6.13
-      form-data: 4.0.5
-      json2typescript: 1.6.1
-      node-fetch: 2.7.0
-    transitivePeerDependencies:
-      - encoding
 
   awilix@8.0.1:
     dependencies:
@@ -22728,8 +22702,6 @@ snapshots:
   json-stream-stringify@3.1.6: {}
 
   json-stringify-safe@5.0.1: {}
-
-  json2typescript@1.6.1: {}
 
   json5@2.2.3: {}
 
