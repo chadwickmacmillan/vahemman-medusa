@@ -25,7 +25,7 @@ const TaxCodeWidget = ({ data }: DetailWidgetProps<AdminProductCategory>) => {
             variant="transparent"
             className="text-ui-fg-interactive hover:text-ui-fg-interactive-hover flex-shrink-0"
           >
-            {editMode ? "Cancel" : "Assign code"}
+            Assign code
           </Button>
         </div>
         <div>
