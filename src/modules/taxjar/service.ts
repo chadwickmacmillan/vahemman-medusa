@@ -239,13 +239,12 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
   }
   private async getProductTaxCode(productId: string) {
     const result = await this.productService_.retrieveProduct(productId, {
-      relations: ["categories"],
+      relations: ["tax_code"],
     });
-    if (!result.categories) {
+    if (!result.tax_code) {
       return this?.defaultTaxCode ?? "";
     }
-    const category = result.categories[0] as unknown as ProductDTOWithTaxCode;
-    return category.tax_code?.code || this?.defaultTaxCode || "";
+    return result.tax_code?.code || this?.defaultTaxCode || "";
   }
 }
 
