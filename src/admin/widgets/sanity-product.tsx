@@ -1,5 +1,5 @@
 import { defineWidgetConfig } from "@medusajs/admin-sdk";
-import { AdminProduct, DetailWidgetProps } from "@medusajs/types";
+import { AdminProduct, DetailWidgetProps } from "@medusajs/framework/types";
 import { ArrowUpRightOnBox } from "@medusajs/icons";
 import { Button, CodeBlock, Container, StatusBadge, toast } from "@medusajs/ui";
 import { useState } from "react";
