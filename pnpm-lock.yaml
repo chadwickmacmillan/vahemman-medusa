@@ -38,6 +38,9 @@ importers:
       '@medusajs/medusa-js':
         specifier: ^6.1.10
         version: 6.1.10(@medusajs/medusa@2.13.1)
+      '@medusajs/types':
+        specifier: ^2.13.1
+        version: 2.13.1(ioredis@5.9.2)(vite@7.3.1(@types/node@25.2.3)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.2))
       '@medusajs/ui':
         specifier: ^4.1.1
         version: 4.1.1(@types/react-dom@19.2.3(@types/react@19.2.13))(@types/react@19.2.13)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)
@@ -81,9 +84,6 @@ importers:
       '@swc/jest':
         specifier: ^0.2.39
         version: 0.2.39(@swc/core@1.15.11(@swc/helpers@0.5.18))
-      '@tanstack/react-query':
-        specifier: 5.64.2
-        version: 5.64.2(react@19.2.4)
       '@types/jest':
         specifier: ^30.0.0
         version: 30.0.0
