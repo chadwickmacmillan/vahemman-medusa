@@ -4,8 +4,7 @@ import Taxcode from "../modules/tax_code";
 
 export default defineLink(
   {
-    linkable: ProductModule.linkable.productCategory,
-    isList: true,
+    linkable: ProductModule.linkable.product,
   },
   Taxcode.linkable.taxCode
 );
