@@ -1,5 +1,4 @@
 import {
-  MutationFunctionContext,
   QueryKey,
   useMutation,
   UseMutationOptions,
@@ -84,17 +83,12 @@ export const useTriggerTaxCodeProductSave = (
         method: "post",
         body: { taxCodeId },
       }),
-    onSuccess: (
-      data: unknown,
-      variables: void,
-      onMutateResult: unknown,
-      context: MutationFunctionContext
-    ) => {
+    onSuccess: (data: unknown, variables: void, context: unknown) => {
       queryClient.invalidateQueries({
         queryKey: [`tax_code_product_${productId}`],
       });
 
-      options?.onSuccess?.(data, variables, onMutateResult, context);
+      options?.onSuccess?.(data, variables, context);
     },
     ...options,
   });
