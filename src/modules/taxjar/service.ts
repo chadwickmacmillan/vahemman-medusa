@@ -20,10 +20,12 @@ import {
   UpdateRefundParams,
 } from "taxjar/dist/types/paramTypes";
 import { ProductDTOWithTaxCode } from "../tax_code/types";
+import TaxCodeService from "../tax_code/service";
+import { TAX_CODE_SERVICE } from "../tax_code";
 
 type InjectedDependencies = {
   logger: Logger;
-  [Modules.PRODUCT]: IProductModuleService;
+  [TAX_CODE_SERVICE]: TaxCodeService;
 };
 
 class TaxjarTaxModuleProvider implements ITaxProvider {
@@ -32,10 +34,10 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
   protected options_: ModuleOptions;
   protected client: Taxjar;
   protected defaultTaxCode?: string;
-  protected productService_: IProductModuleService;
+  protected taxCodeService_: TaxCodeService;
 
   constructor(
-    { product, logger }: InjectedDependencies,
+    { logger, tax_code }: InjectedDependencies,
     options: ModuleOptions
   ) {
     if (!options.apiKey) {
@@ -46,7 +48,7 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
     }
     this.logger_ = logger;
     this.options_ = options;
-    this.productService_ = product;
+    this.taxCodeService_ = tax_code;
 
     this.client = new Taxjar(options);
     this.defaultTaxCode = options?.defaultTaxCode;
@@ -238,10 +240,8 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
     }
   }
   private async getProductTaxCode(productId: string) {
-    const result = (await this.productService_.retrieveProduct(productId, {
-      relations: ["tax_code"],
-    })) as ProductDTOWithTaxCode;
-    return result.tax_code?.code || this?.defaultTaxCode || "";
+    const result = await this.taxCodeService_.retrieveTaxCode(productId);
+    return result?.code || this?.defaultTaxCode || "";
   }
 }
 

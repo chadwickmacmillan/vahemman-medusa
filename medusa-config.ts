@@ -1,5 +1,6 @@
 import { loadEnv, defineConfig } from "@medusajs/framework/utils";
 import { Modules } from "@medusajs/framework/utils";
+import { TAX_CODE_SERVICE } from "./src/modules/tax_code";
 
 loadEnv(process.env.NODE_ENV || "development", process.cwd());
 
@@ -172,7 +173,7 @@ module.exports = defineConfig({
           },
         ],
       },
-      dependencies: [Modules.PRODUCT],
+      dependencies: [TAX_CODE_SERVICE],
     },
     {
       resolve: "./src/modules/tax_code",
