@@ -48,6 +48,8 @@ export async function POST(
     throw new MedusaError(MedusaErrorTypes.NOT_FOUND, "Product not found!");
   }
 
+  console.log(data, "data from tax_code!");
+
   if (data[0].tax_code) {
     await link.dismiss({
       [Modules.PRODUCT]: {
