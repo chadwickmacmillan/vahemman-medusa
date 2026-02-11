@@ -1,4 +1,12 @@
-import { Button, Container, FocusModal, Select, toast } from "@medusajs/ui";
+import {
+  Button,
+  Container,
+  FocusModal,
+  Heading,
+  Select,
+  Text,
+  toast,
+} from "@medusajs/ui";
 
 import { SectionRow } from "./SectionRow";
 import { useTaxCodes, useTriggerTaxCodeProductSave } from "../hooks/taxcode";
@@ -55,25 +63,33 @@ const AssignCategoryTaxCodeModal = ({
     <FocusModal open={isOpen} onOpenChange={onOpenChange}>
       <FocusModal.Content>
         <FocusModal.Header>
-          <FocusModal.Title>Assign tax code to product</FocusModal.Title>
+          <FocusModal.Title>Assign Tax Code</FocusModal.Title>
         </FocusModal.Header>
         <FocusModal.Body>
-          <div>
-            <Select
-              value={selectedValue}
-              onValueChange={(val) => setSelectedValue(val)}
-            >
-              <Select.Trigger>
-                <Select.Value placeholder="Name" />
-              </Select.Trigger>
-              <Select.Content>
-                {tax_codes?.map((taxCode) => (
-                  <Select.Item key={taxCode.id} value={taxCode.id}>
-                    {taxCode.name}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select>
+          <div className="flex w-full max-w-lg flex-col gap-y-8">
+            <div className="flex flex-col gap-y-1">
+              <Heading>Assign Tax Code</Heading>
+              <Text className="text-ui-fg-subtle">
+                Assign US Tax Code to a product from the list below.
+              </Text>
+            </div>
+            <div>
+              <Select
+                value={selectedValue}
+                onValueChange={(val) => setSelectedValue(val)}
+              >
+                <Select.Trigger>
+                  <Select.Value placeholder="Name" />
+                </Select.Trigger>
+                <Select.Content>
+                  {tax_codes?.map((taxCode) => (
+                    <Select.Item key={taxCode.id} value={taxCode.id}>
+                      {taxCode.name}
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select>
+            </div>
           </div>
           <Container>
             <SectionRow title="Code" value={selectedTaxCode?.code ?? "-"} />
