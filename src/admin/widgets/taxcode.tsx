@@ -25,20 +25,14 @@ const TaxCodeWidget = ({ data }: DetailWidgetProps<AdminProductCategory>) => {
             </DropdownMenu.Trigger>
             <DropdownMenu.Content>
               <DropdownMenu.Item className="gap-x-2">
-                <PencilSquare className="text-ui-fg-subtle" />
+                <PencilSquare
+                  className="text-ui-fg-subtle"
+                  onSelect={() => setEditMode(true)}
+                />
                 Edit
               </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu>
-          <Button
-            onClick={() => setEditMode(true)}
-            type="button"
-            size="small"
-            variant="transparent"
-            className="text-ui-fg-interactive hover:text-ui-fg-interactive-hover flex-shrink-0"
-          >
-            Assign code
-          </Button>
         </div>
         {tax_code?.code ? (
           <>
