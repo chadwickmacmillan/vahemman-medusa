@@ -51,7 +51,7 @@ const TaxCodeWidget = ({ data }: DetailWidgetProps<AdminProductCategory>) => {
 };
 
 export const config = defineWidgetConfig({
-  zone: "product.details.after",
+  zone: "product.details.side.after",
 });
 
 export default TaxCodeWidget;
