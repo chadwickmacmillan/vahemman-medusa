@@ -44,14 +44,6 @@ class SanityModuleService {
       _type: this.typeMap[SyncDocumentTypes.PRODUCT],
       _id: product.id,
       title: product.title,
-      specs: [
-        {
-          _key: product.id,
-          _type: "spec",
-          title: product.title,
-          lang: "en",
-        },
-      ],
     };
   };
   private transformProductForUpdate = (product: ProductDTO) => {
@@ -65,11 +57,8 @@ class SanityModuleService {
   constructor({ logger }: InjectedDependencies, options: ModuleOptions) {
     this.client = createClient({
       projectId: options.project_id,
-
       apiVersion: options.api_version,
-
       dataset: options.dataset,
-
       token: options.api_token,
     });
     this.logger = logger;

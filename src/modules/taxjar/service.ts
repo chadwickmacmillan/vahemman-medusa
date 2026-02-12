@@ -7,7 +7,7 @@ import {
   ShippingTaxLineDTO,
   TaxCalculationContext,
   IProductModuleService,
-  ProductDTO,
+  TaxableItemDTO,
 } from "@medusajs/framework/types";
 import Taxjar from "taxjar";
 import { MedusaError, Modules } from "@medusajs/framework/utils";
@@ -20,9 +20,9 @@ import {
   UpdateOrderParams,
   UpdateRefundParams,
 } from "taxjar/dist/types/paramTypes";
-import { TaxCode } from "../tax_code/types";
 import { TAX_CODE_SERVICE } from "../tax_code";
 import TaxCodeService from "../tax_code/service";
+import { TaxCode } from "../tax_code/types";
 
 type InjectedDependencies = {
   logger: Logger;
@@ -78,25 +78,23 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
     }
 
     try {
-      const taxLineItems: TaxLineItem[] = await Promise.all(
-        itemLines.map(async (line) => {
-          const productTaxCode = await this.getProductTaxCode(
-            line.line_item.product_id
-          );
-          return {
-            id: line.line_item.id,
-            quantity: Number(line.line_item.quantity?.toString()),
-            unit_price: Number(line.line_item.unit_price?.toString()),
-            product_tax_code: productTaxCode,
-          };
-        })
-      );
+      const taxLineItems: TaxLineItem[] = itemLines.map((line) => {
+        this.logger_.info(
+          `Product tax code: ${"product_tax_code" in line.line_item && line.line_item.product_tax_code}`
+        );
+        return {
+          id: line.line_item.id,
+          quantity: Number(line.line_item.quantity?.toString()),
+          unit_price: Number(line.line_item.unit_price?.toString()),
+          product_tax_code:
+            (line.line_item as TaxableItemDTO & { product_tax_code?: string })
+              .product_tax_code ?? "",
+        };
+      });
 
       const shipping = shippingLines.reduce((acc, l) => {
         return (acc += Number(l.shipping_line.unit_price?.toString()));
       }, 0);
-
-      console.log(context.address);
 
       const { tax } = await this.client.taxForOrder({
         to_country: context.address.country_code ?? "",

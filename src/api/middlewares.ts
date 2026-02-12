@@ -1,6 +1,7 @@
 import { validateAndTransformBody } from "@medusajs/framework";
 import { defineMiddlewares } from "@medusajs/medusa";
 import { AssignTaxCodeValidator } from "./admin/validators";
+import { storeCartRoutesMiddlewares } from "./store/carts/middlewares";
 
 export default defineMiddlewares({
   routes: [
@@ -9,5 +10,6 @@ export default defineMiddlewares({
       method: ["POST"],
       middlewares: [validateAndTransformBody(AssignTaxCodeValidator)],
     },
+    ...storeCartRoutesMiddlewares,
   ],
 });

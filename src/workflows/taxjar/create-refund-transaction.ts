@@ -34,7 +34,7 @@ export const createRefundTransactionWorkflow = createWorkflow(
         "order.items.quantity",
         "order.items.product_id",
         "order.items.product_description",
-        "order.items.product.tax_code.*",
+        "order.items.product.tax_code.code",
         "order.items.unit_price",
         "order.items.discount_total",
         "order.items.discount_tax_total",

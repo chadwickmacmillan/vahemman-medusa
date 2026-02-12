@@ -37,7 +37,7 @@ export const createOrderTransactionWorkflow = createWorkflow(
         "items.quantity",
         "items.product_id",
         "items.product_description",
-        "items.product.tax_code.*",
+        "items.product.tax_code.code",
         "items.unit_price",
         "items.discount_total",
         "items.discount_tax_total",
