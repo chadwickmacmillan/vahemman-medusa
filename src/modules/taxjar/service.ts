@@ -7,6 +7,7 @@ import {
   ShippingTaxLineDTO,
   TaxCalculationContext,
   IProductModuleService,
+  ProductDTO,
 } from "@medusajs/framework/types";
 import Taxjar from "taxjar";
 import { MedusaError, Modules } from "@medusajs/framework/utils";
@@ -19,12 +20,13 @@ import {
   UpdateOrderParams,
   UpdateRefundParams,
 } from "taxjar/dist/types/paramTypes";
-import { ProductDTOWithTaxCode } from "../tax_code/types";
-import TaxCodeService from "../tax_code/service";
+import { TaxCode } from "../tax_code/types";
 import { TAX_CODE_SERVICE } from "../tax_code";
+import TaxCodeService from "../tax_code/service";
 
 type InjectedDependencies = {
   logger: Logger;
+  [Modules.PRODUCT]: IProductModuleService;
   [TAX_CODE_SERVICE]: TaxCodeService;
 };
 
@@ -34,10 +36,11 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
   protected options_: ModuleOptions;
   protected client: Taxjar;
   protected defaultTaxCode?: string;
+  protected productService_: IProductModuleService;
   protected taxCodeService_: TaxCodeService;
 
   constructor(
-    { logger, tax_code }: InjectedDependencies,
+    { logger, product, tax_code }: InjectedDependencies,
     options: ModuleOptions
   ) {
     if (!options.apiKey) {
@@ -48,6 +51,7 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
     }
     this.logger_ = logger;
     this.options_ = options;
+    this.productService_ = product;
     this.taxCodeService_ = tax_code;
 
     this.client = new Taxjar(options);
@@ -63,9 +67,16 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
     shippingLines: ShippingTaxCalculationLine[],
     context: TaxCalculationContext
   ): Promise<(ItemTaxLineDTO | ShippingTaxLineDTO)[]> {
-    if (itemLines.length === 0) {
+    if (
+      itemLines.length === 0 ||
+      !context.address.province_code ||
+      !context.address.city ||
+      !context.address.postal_code ||
+      !context.address.country_code
+    ) {
       return [];
     }
+
     try {
       const taxLineItems: TaxLineItem[] = await Promise.all(
         itemLines.map(async (line) => {
@@ -84,6 +95,8 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
       const shipping = shippingLines.reduce((acc, l) => {
         return (acc += Number(l.shipping_line.unit_price?.toString()));
       }, 0);
+
+      console.log(context.address);
 
       const { tax } = await this.client.taxForOrder({
         to_country: context.address.country_code ?? "",
@@ -240,8 +253,8 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
     }
   }
   private async getProductTaxCode(productId: string) {
-    const result = await this.taxCodeService_.retrieveTaxCode(productId);
-    return result?.code || this?.defaultTaxCode || "";
+    const result = await this.productService_.retrieveProduct(productId);
+    return "";
   }
 }
 

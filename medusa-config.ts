@@ -173,7 +173,7 @@ module.exports = defineConfig({
           },
         ],
       },
-      dependencies: [TAX_CODE_SERVICE],
+      dependencies: [Modules.PRODUCT, TAX_CODE_SERVICE],
     },
     {
       resolve: "./src/modules/tax_code",
