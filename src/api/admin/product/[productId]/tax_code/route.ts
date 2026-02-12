@@ -7,7 +7,6 @@ import {
 } from "@medusajs/framework/utils";
 import { AssignTaxCode } from "../../../validators";
 import { TAX_CODE_SERVICE } from "../../../../../modules/tax_code";
-import { TaxCode } from "../../../../../modules/tax_code/types";
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const productId = req.params.productId;

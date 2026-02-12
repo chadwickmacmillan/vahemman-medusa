@@ -1,6 +1,6 @@
 import type { SubscriberArgs, SubscriberConfig } from "@medusajs/framework";
 
-import { createOrderTransactionWorkflow } from "../workflows/taxjar/create-order-transaction";
+import { createOrderTransactionWorkflow } from "../../workflows/taxjar/create-order-transaction";
 
 export default async function orderCompletedHandler({
   event: { data },
@@ -14,5 +14,5 @@ export default async function orderCompletedHandler({
 }
 
 export const config: SubscriberConfig = {
-  event: "order.completed",
+  event: ["order.completed"],
 };

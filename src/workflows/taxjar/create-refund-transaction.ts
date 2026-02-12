@@ -19,38 +19,28 @@ export const createRefundTransactionWorkflow = createWorkflow(
     const { data: paymentCollections } = useQueryGraphStep({
       entity: "payment_collection",
       fields: [
-        "order.items.id",
-        "order.items.quantity",
-        "order.items.product_id",
-        "order.items.product_description",
-        "order.items.unit_price",
-        "order.items.tax_lines.id",
-        "order.items.tax_lines.description",
-        "order.items.tax_lines.code",
-        "order.items.tax_lines.rate",
-        "order.items.tax_lines.provider_id",
-        "order.items.variant.sku",
-        "order.shipping_methods.id",
-        "order.shipping_methods.amount",
-        "order.shipping_methods.tax_lines.id",
-        "order.shipping_methods.tax_lines.description",
-        "order.shipping_methods.tax_lines.code",
-        "order.shipping_methods.tax_lines.rate",
-        "order.shipping_methods.tax_lines.provider_id",
-        "order.shipping_methods.shipping_option_id",
+        "order.id",
+        "order.created_at",
+        "order.shipping_total",
+        "order.shipping_tax_total",
+        "order.tax_total",
+        "order.total",
         "order.customer.id",
-        "order.customer.email",
-        "order.customer.metadata",
-        "order.customer.groups.id",
-        "sorder.hipping_address.id",
         "order.shipping_address.address_1",
         "order.shipping_address.address_2",
         "order.shipping_address.city",
         "order.shipping_address.postal_code",
         "order.shipping_address.country_code",
-        "order.shipping_address.region_code",
         "order.shipping_address.province",
-        "order.shipping_address.metadata",
+        "order.items.id",
+        "order.items.quantity",
+        "order.items.product_id",
+        "order.items.product_description",
+        "order.items.product.tax_code.*",
+        "order.items.unit_price",
+        "order.items.discount_total",
+        "order.items.discount_tax_total",
+        "order.items.tax_total",
         "payments.id", // payments in this collection
         "payments.refunds.id",
         "payments.refunds.amount",
@@ -66,10 +56,14 @@ export const createRefundTransactionWorkflow = createWorkflow(
     const transactionInput = transform(
       { paymentCollections },
       ({ paymentCollections }) => {
-        const [paymentCollection] = paymentCollections;
+        const paymentCollection = paymentCollections[0];
         const { order } = paymentCollection;
 
-        const refund = paymentCollection.payments?.[0]?.refunds?.[0];
+        const refund = paymentCollection.payments?.[0]?.refunds?.sort((a, b) =>
+          a && b
+            ? (a.created_at as string).localeCompare(b.created_at as string)
+            : 0
+        )?.[0];
 
         const lineItems = order?.items?.map((item) => {
           return {
@@ -77,7 +71,7 @@ export const createRefundTransactionWorkflow = createWorkflow(
             quantity: item?.quantity ?? 0,
             product_identifier: item?.product_id ?? "",
             description: item?.product_description ?? "",
-            product_tax_code: "", // TODO
+            product_tax_code: item?.product?.tax_code?.code ?? "",
             unit_price: item?.unit_price ?? 0,
             discount:
               (item?.discount_total ?? 0) - (item?.discount_tax_total ?? 0),
