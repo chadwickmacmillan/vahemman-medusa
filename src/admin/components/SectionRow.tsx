@@ -10,9 +10,9 @@ export const SectionRow = ({ title, value, actions }: SectionRowProps) => {
   return (
     <div
       className={clx(
-        `text-ui-fg-subtle grid grid-cols-2 items-center px-6 py-4`,
+        "text-ui-fg-subtle grid w-full grid-cols-2 items-center gap-4 px-6 py-4",
         {
-          "grid-cols-[1fr_1fr_28px]": !!actions,
+          "grid-cols-[1fr_1fr_auto]": !!actions,
         }
       )}
     >
@@ -26,7 +26,6 @@ export const SectionRow = ({ title, value, actions }: SectionRowProps) => {
       >
         {value ?? "-"}
       </Text>
-      {actions && <div>{actions}</div>}
     </div>
   );
 };
