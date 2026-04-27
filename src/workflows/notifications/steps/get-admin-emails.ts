@@ -13,15 +13,17 @@ export const getAdminEmailsForNotificationTypeStep = createStep(
 
     const users = await userService.listUsers({}, { select: ["id", "email"] });
 
-    const enabledPreferences = await prefService.listNotificationPreferences({
+    const disabledPrefs = await prefService.listNotificationPreferences({
       user_id: users.map((u) => u.id),
       type,
-      enabled: true,
+      enabled: false,
     });
 
-    const emails users.filter(u => enabledPreferences.some(p => p.user_id === u.id))
+    const disabledUserIds = new Set(disabledPrefs.map((p) => p.user_id));
 
-
+    const emails = users
+      .filter((u) => u.email && !disabledUserIds.has(u.id))
+      .map((u) => u.email!);
 
     return new StepResponse(emails);
   },

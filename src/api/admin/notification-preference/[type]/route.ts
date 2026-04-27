@@ -2,8 +2,8 @@ import {
   AuthenticatedMedusaRequest,
   MedusaResponse,
 } from "@medusajs/framework";
-import { NOTIFICATION_PREFERENCES_MODULE } from "../../../../modules/notification_preferences";
-import NotificationPreferencesService from "../../../../modules/notification_preferences/service";
+import { NOTIFICATION_PREFERENCES_MODULE } from "../../../../modules/notification_preference";
+import NotificationPreferencesService from "../../../../modules/notification_preference/service";
 
 export const POST = async (
   req: AuthenticatedMedusaRequest,

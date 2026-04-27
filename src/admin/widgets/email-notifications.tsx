@@ -1,5 +1,5 @@
 import { defineWidgetConfig } from "@medusajs/admin-sdk";
-import { Container, Heading, Switch, Text, toast } from "@medusajs/ui";
+import { Container, Heading, Switch, Text } from "@medusajs/ui";
 import {
   useNotificationPreferences,
   useToggleNotificationPreference,
