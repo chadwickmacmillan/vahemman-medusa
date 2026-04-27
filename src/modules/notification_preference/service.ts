@@ -6,7 +6,8 @@ class NotificationPreferenceService extends MedusaService({
 }) {
   async getPreference(userId: string, type: string) {
     const [pref] = await this.listNotificationPreferences({
-      filters: { user_id: userId, type },
+      user_id: userId,
+      type,
     });
     return pref ?? null;
   }

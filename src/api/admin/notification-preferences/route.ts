@@ -16,9 +16,7 @@ export const GET = async (
     NOTIFICATION_PREFERENCE_MODULE,
   );
 
-  const prefs = await service.listNotificationPreferences({
-    filters: { user_id: userId },
-  });
+  const prefs = await service.listNotificationPreferences({ user_id: userId });
 
   const prefMap = Object.fromEntries(prefs.map((p) => [p.type, p.enabled]));
 
