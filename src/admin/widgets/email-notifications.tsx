@@ -26,20 +26,6 @@ const EmailNotificationsWidget = () => {
           <Text className="text-ui-fg-subtle">Loading...</Text>
         </div>
       )}
-      {preferences?.map((pref) => (
-        <div
-          key={pref.type}
-          className="flex items-center justify-between px-6 py-4"
-        >
-          <Text size="small" weight="plus">
-            {notificationTypeMap[pref.type] ?? pref.type}
-          </Text>
-          <Switch
-            checked={pref.enabled}
-            onCheckedChange={(enabled) => toggle({ type: pref.type, enabled })}
-          />
-        </div>
-      ))}
       {Object.entries(notificationTypeMap).map(([type, label]) => {
         const preference = preferences?.find((p) => p.type === type);
         return (
