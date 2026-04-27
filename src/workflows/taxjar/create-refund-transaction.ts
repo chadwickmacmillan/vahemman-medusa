@@ -58,11 +58,13 @@ export const createRefundTransactionWorkflow = createWorkflow(
         const paymentCollection = paymentCollections[0];
         const { order } = paymentCollection;
 
-        const refund = paymentCollection.payments?.[0]?.refunds?.sort((a, b) =>
+        const refund = (
+          paymentCollection.payments?.[0]?.refunds as Refund[] | undefined
+        )?.sort((a, b) =>
           a && b
             ? (a.created_at as string).localeCompare(b.created_at as string)
             : 0,
-        )?.[0] as Refund | undefined;
+        )?.[0];
 
         const lineItems = order?.items?.map((item) => {
           return {
