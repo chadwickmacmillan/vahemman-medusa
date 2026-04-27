@@ -50,7 +50,7 @@ function OrderPlacedEmailComponent({
               We're processing your order and will notify you when it ships.
             </Text>
             <Text className="text-center text-gray-500 mt-2">
-              Order #{order.display_id + 1000}
+              Order #{order.display_id}
             </Text>
           </Container>
 

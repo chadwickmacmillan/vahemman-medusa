@@ -10,6 +10,7 @@ import {
 } from "@medusajs/framework/types";
 
 import { CreateEmailOptions, Resend } from "resend";
+import { orderPlacedAdminEmail } from "./emails/OrderPlacedAdmin";
 import { orderPlacedEmail } from "./emails/OrderPlaced";
 import { shipmentCreatedEmail } from "./emails/ShipmentCreated";
 import { passwordResetEmail } from "./emails/PasswordReset";
@@ -33,6 +34,7 @@ type ResendOptions = {
 
 enum Templates {
   ORDER_PLACED = "order-placed",
+  ORDER_PLACED_ADMIN = "order-placed-admin",
   SHIPMENT_CREATED = "shipment-created",
   PASSWORD_RESET = "password-reset",
   USER_INVITED = "user-invited",
@@ -41,6 +43,7 @@ enum Templates {
 const templates: { [key in Templates]?: (props: unknown) => React.ReactNode } =
   {
     [Templates.ORDER_PLACED]: orderPlacedEmail,
+    [Templates.ORDER_PLACED_ADMIN]: orderPlacedAdminEmail,
     [Templates.SHIPMENT_CREATED]: shipmentCreatedEmail,
     [Templates.PASSWORD_RESET]: passwordResetEmail,
     [Templates.USER_INVITED]: userInvitedEmail,
@@ -55,7 +58,7 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
   constructor(
     { logger }: InjectedDependencies,
 
-    options: ResendOptions
+    options: ResendOptions,
   ) {
     super();
     this.resendClient = new Resend(options.api_key);
@@ -68,14 +71,14 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
     if (!options.api_key) {
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
-        "Option `api_key` is required in the provider's options."
+        "Option `api_key` is required in the provider's options.",
       );
     }
 
     if (!options.from) {
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
-        "Option `from` is required in the provider's options."
+        "Option `from` is required in the provider's options.",
       );
     }
   }
@@ -100,6 +103,8 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
     }
 
     switch (template) {
+      case Templates.ORDER_PLACED_ADMIN:
+        return "Order Confirmation";
       case Templates.ORDER_PLACED:
         return "Order Confirmation";
       case Templates.SHIPMENT_CREATED:
@@ -114,7 +119,7 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
   }
 
   async send(
-    notification: ProviderSendNotificationDTO
+    notification: ProviderSendNotificationDTO,
   ): Promise<ProviderSendNotificationResultsDTO> {
     const template = this.getTemplate(notification.template as Templates);
 
@@ -122,7 +127,7 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
       this.logger.error(
         `Couldn't find an email template for ${
           notification.template
-        }. The valid options are ${Object.values(Templates)}`
+        }. The valid options are ${Object.values(Templates)}`,
       );
 
       return {};

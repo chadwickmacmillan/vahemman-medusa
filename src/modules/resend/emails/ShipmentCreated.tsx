@@ -47,7 +47,7 @@ function ShipmentCreatedEmailComponent({
 
   const fulfillmentOrderLineItemIds = useMemo(
     () => fulfillment.items.map((item) => item.line_item_id),
-    [fulfillment]
+    [fulfillment],
   );
 
   const orderItems = useMemo(
@@ -58,15 +58,15 @@ function ShipmentCreatedEmailComponent({
         }
         return acc;
       }, [] as OrderLineItemDTO[]),
-    [fulfillmentOrderLineItemIds, fulfillment]
+    [fulfillmentOrderLineItemIds, fulfillment],
   );
 
   const isEveryItemInFulfillment = useMemo(
     () =>
       fulfillment.order.items?.every((item) =>
-        fulfillmentOrderLineItemIds.includes(item.id)
+        fulfillmentOrderLineItemIds.includes(item.id),
       ),
-    [fulfillment, fulfillmentOrderLineItemIds]
+    [fulfillment, fulfillmentOrderLineItemIds],
   );
 
   return (
@@ -83,7 +83,7 @@ function ShipmentCreatedEmailComponent({
           {/* Thank You Message */}
           <Container className="p-6">
             <Text className="text-gray-600">
-              Order #{fulfillment.order.display_id + 1000}
+              Order #{fulfillment.order.display_id}
             </Text>
             <Text className="text-gray-600 mt-2">
               Dear{" "}
