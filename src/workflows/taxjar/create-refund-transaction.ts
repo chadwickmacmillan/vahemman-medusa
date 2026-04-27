@@ -6,6 +6,7 @@ import {
 import { useQueryGraphStep } from "@medusajs/medusa/core-flows";
 import { CreateRefundParams, LineItem } from "taxjar/dist/types/paramTypes";
 import { createRefundStep } from "./steps/create-refund";
+import { Refund } from "../../../.medusa/types/query-entry-points";
 
 type WorkflowInput = {
   id: string;
@@ -60,8 +61,8 @@ export const createRefundTransactionWorkflow = createWorkflow(
         const refund = paymentCollection.payments?.[0]?.refunds?.sort((a, b) =>
           a && b
             ? (a.created_at as string).localeCompare(b.created_at as string)
-            : 0
-        )?.[0];
+            : 0,
+        )?.[0] as Refund | undefined;
 
         const lineItems = order?.items?.map((item) => {
           return {
@@ -97,11 +98,11 @@ export const createRefundTransactionWorkflow = createWorkflow(
           customer_id: order?.customer?.id ?? "",
         };
         return input;
-      }
+      },
     );
 
     const response = createRefundStep(transactionInput);
 
     return new WorkflowResponse(response);
-  }
+  },
 );
