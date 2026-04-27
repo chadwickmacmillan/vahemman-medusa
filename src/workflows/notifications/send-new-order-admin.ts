@@ -37,26 +37,13 @@ export const sendNewOrderAdminWorkflow = createWorkflow(
       },
     });
 
-    const { data: products } = useQueryGraphStep({
-      entity: "product",
-      fields: [
-        "*",
-        "images.*",
-        "variants.*",
-        "variants.inventory_quantity",
-        "variants.images.*",
-        "variants.options.*",
-        "variants.options.option.*",
-      ],
-    }).config({ name: "fetch-products" });
-
     const notification = when(
       { orders },
       (data) => !!data.orders[0].email,
     ).then(() => {
       return sendNotificationStep([
         {
-          to: orders[0].email!,
+          to: "emily@vahemman.com",
           channel: "email",
           template: "order-placed-admin",
           data: {

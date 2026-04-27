@@ -13,5 +13,5 @@ export const sendNotificationStep = createStep(
       await notificationModuleService.createNotifications(data);
 
     return new StepResponse(notification);
-  }
+  },
 );

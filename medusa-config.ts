@@ -185,6 +185,16 @@ module.exports = defineConfig({
         ],
       },
     },
+    {
+      resolve: "./src/modules/notification_preference",
+      options: {
+        providers: [
+          {
+            id: "notification_preference",
+          },
+        ],
+      },
+    },
   ],
   plugins: [],
 });

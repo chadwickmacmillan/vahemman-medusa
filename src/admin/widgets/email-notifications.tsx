@@ -1,66 +1,51 @@
 import { defineWidgetConfig } from "@medusajs/admin-sdk";
-import { AdminProduct, DetailWidgetProps } from "@medusajs/framework/types";
-import { ArrowUpRightOnBox } from "@medusajs/icons";
+import { Container, Heading, Switch, Text, toast } from "@medusajs/ui";
 import {
-  Button,
-  Checkbox,
-  CodeBlock,
-  Container,
-  Label,
-  StatusBadge,
-  Text,
-  toast,
-} from "@medusajs/ui";
-import { useState } from "react";
-import {
-  useSanityDocument,
-  useTriggerSanityProductSync,
-} from "../hooks/sanity";
+  useNotificationPreferences,
+  useToggleNotificationPreference,
+} from "../hooks/email-notifications";
 
-const EmailNotificationsWidget = ({
-  data,
-}: DetailWidgetProps<AdminProduct>) => {
-  const { mutateAsync, isPending } = useTriggerSanityProductSync(data.id);
-  const { sanity_document, studio_url, isLoading } = useSanityDocument(data.id);
-  const [showCodeBlock, setShowCodeBlock] = useState(false);
+const notificationTypeMap: Record<string, string> = {
+  "order-placed": "New order",
+};
 
-  const handleSync = async () => {
-    try {
-      await mutateAsync(undefined);
-      toast.success(`Sync triggered.`);
-    } catch (err) {
-      toast.error(
-        `Couldn't trigger sync: ${(err as Record<string, unknown>).message}`,
-      );
-    }
-  };
+const EmailNotificationsWidget = () => {
+  const { preferences, isLoading } = useNotificationPreferences();
+  const { mutate: toggle } = useToggleNotificationPreference();
 
   return (
-    <Container>
-      <div className="flex justify-between w-full items-center">
-        <div className="flex gap-2 items-center">
-          <h2>Email Notifications</h2>
-          <Text>Receive email notifications for updates.</Text>
-        </div>
+    <Container className="divide-y p-0">
+      <div className="px-6 py-4">
+        <Heading level="h2">Email Notifications</Heading>
+        <Text className="text-ui-fg-subtle" size="small">
+          Manage which emails you receive as an admin.
+        </Text>
       </div>
-      <div className="mt-6">
-        <div className="mb-4 flex gap-4">
-          <div className="flex items-center space-x-2">
-            <Checkbox id="order-created" />
-            <Label htmlFor="order-created">Order placed</Label>
-          </div>
-          <Button size="small" variant="secondary">
-            Save
-          </Button>
+      {isLoading && (
+        <div className="px-6 py-4">
+          <Text className="text-ui-fg-subtle">Loading...</Text>
         </div>
-      </div>
+      )}
+      {preferences?.map((pref) => (
+        <div
+          key={pref.type}
+          className="flex items-center justify-between px-6 py-4"
+        >
+          <Text size="small" weight="plus">
+            {notificationTypeMap[pref.type] ?? pref.type}
+          </Text>
+          <Switch
+            checked={pref.enabled}
+            onCheckedChange={(enabled) => toggle({ type: pref.type, enabled })}
+          />
+        </div>
+      ))}
     </Container>
   );
 };
 
-// The widget's configurations
 export const config = defineWidgetConfig({
-  zone: "user.details.after",
+  zone: "profile.details.after",
 });
 
 export default EmailNotificationsWidget;
