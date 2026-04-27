@@ -16,7 +16,7 @@ export const useToggleNotificationPreference = (
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ type, enabled }) =>
+    mutationFn: ({ type, enabled }: { type: string; enabled: boolean }) =>
       sdk.client.fetch(`/admin/notification-preferences/${type}`, {
         method: "post",
         body: { enabled },

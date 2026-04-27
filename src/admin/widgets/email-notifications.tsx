@@ -5,9 +5,9 @@ import {
   useToggleNotificationPreference,
 } from "../hooks/email-notifications";
 
-const notificationTypeMap: Record<string, string> = {
+const notificationTypeMap = {
   "order-placed": "New order",
-};
+} as const;
 
 const EmailNotificationsWidget = () => {
   const { preferences, isLoading } = useNotificationPreferences();
@@ -40,6 +40,24 @@ const EmailNotificationsWidget = () => {
           />
         </div>
       ))}
+      {Object.entries(notificationTypeMap).map(([type, label]) => {
+        const preference = preferences?.find((p) => p.type === type);
+        return (
+          <div
+            key={type}
+            className="flex items-center justify-between px-6 py-4"
+          >
+            <Text size="small" weight="plus">
+              {label}
+            </Text>
+            <Switch
+              defaultChecked={preference?.enabled ?? true}
+              checked={preference?.enabled}
+              onCheckedChange={(enabled) => toggle({ type, enabled })}
+            />
+          </div>
+        );
+      })}
     </Container>
   );
 };
