@@ -2,7 +2,7 @@ import {
   AuthenticatedMedusaRequest,
   MedusaResponse,
 } from "@medusajs/framework";
-import { NOTIFICATION_PREFERENCES_MODULE } from "../../../../modules/notification_preference";
+import { NOTIFICATION_PREFERENCE_MODULE } from "../../../../modules/notification_preference";
 import NotificationPreferencesService from "../../../../modules/notification_preference/service";
 
 export const POST = async (
@@ -14,7 +14,7 @@ export const POST = async (
   const { enabled } = req.body as { enabled: boolean };
 
   const service = req.scope.resolve<NotificationPreferencesService>(
-    NOTIFICATION_PREFERENCES_MODULE,
+    NOTIFICATION_PREFERENCE_MODULE,
   );
 
   const preference = await service.setPreference(userId, type, enabled);

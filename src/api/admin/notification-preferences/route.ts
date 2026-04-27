@@ -2,7 +2,7 @@ import {
   AuthenticatedMedusaRequest,
   MedusaResponse,
 } from "@medusajs/framework";
-import { NOTIFICATION_PREFERENCES_MODULE } from "../../../modules/notification_preference";
+import { NOTIFICATION_PREFERENCE_MODULE } from "../../../modules/notification_preference";
 import NotificationPreferencesService from "../../../modules/notification_preference/service";
 
 const PREFERENCE_TYPES = ["order-placed"];
@@ -13,7 +13,7 @@ export const GET = async (
 ) => {
   const userId = req.auth_context.actor_id;
   const service = req.scope.resolve<NotificationPreferencesService>(
-    NOTIFICATION_PREFERENCES_MODULE,
+    NOTIFICATION_PREFERENCE_MODULE,
   );
 
   const prefs = await service.listNotificationPreferences({
