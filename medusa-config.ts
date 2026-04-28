@@ -1,4 +1,8 @@
-import { loadEnv, defineConfig } from "@medusajs/framework/utils";
+import {
+  loadEnv,
+  defineConfig,
+  ContainerRegistrationKeys,
+} from "@medusajs/framework/utils";
 import { Modules } from "@medusajs/framework/utils";
 import { TAX_CODE_SERVICE } from "./src/modules/tax_code";
 
@@ -191,6 +195,18 @@ module.exports = defineConfig({
         providers: [
           {
             id: "notification_preference",
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@medusajs/medusa/auth",
+      dependencies: [Modules.CACHE, ContainerRegistrationKeys.LOGGER],
+      options: {
+        providers: [
+          {
+            resolve: "@medusajs/medusa/auth/providers/email-password",
+            id: "emailpass",
           },
         ],
       },
