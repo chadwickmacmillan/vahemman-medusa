@@ -199,18 +199,6 @@ module.exports = defineConfig({
         ],
       },
     },
-    {
-      resolve: "@medusajs/medusa/auth",
-      dependencies: [Modules.CACHE, ContainerRegistrationKeys.LOGGER],
-      options: {
-        providers: [
-          {
-            resolve: "@medusajs/medusa/auth/providers/email-password",
-            id: "emailpass",
-          },
-        ],
-      },
-    },
   ],
   plugins: [],
 });
