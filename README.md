@@ -32,6 +32,8 @@
   </a>
 </p>
 
+## Test
+
 ## Compatibility
 
 This starter is compatible with versions >= 2 of `@medusajs/medusa`. 
