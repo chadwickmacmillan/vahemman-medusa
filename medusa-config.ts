@@ -43,6 +43,9 @@ module.exports = defineConfig({
             id: "shipstation",
             options: {
               api_key: process.env.SHIPSTATION_API_KEY,
+              default_carrier_id: process.env.SHIPSTATION_DEFAULT_CARRIER_ID,
+              default_service_code:
+                process.env.SHIPSTATION_DEFAULT_SERVICE_CODE,
             },
           },
         ],

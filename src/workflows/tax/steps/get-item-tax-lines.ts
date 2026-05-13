@@ -2,18 +2,24 @@ import {
   CartLineItemDTO,
   CartShippingMethodDTO,
   CartWorkflowDTO,
+  IStockLocationService,
   ITaxModuleService,
   ItemTaxLineDTO,
   OrderLineItemDTO,
   OrderShippingMethodDTO,
   OrderWorkflowDTO,
   ShippingTaxLineDTO,
+  StockLocationAddressDTO,
   TaxableItemDTO,
   TaxableShippingDTO,
   TaxCalculationContext,
 } from "@medusajs/framework/types";
 import { isDefined, MedusaError, Modules } from "@medusajs/framework/utils";
 import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk";
+
+export type TaxCalculationContextWithFromLocation = TaxCalculationContext & {
+  from_location?: StockLocationAddressDTO;
+};
 
 /**
  * The data to retrieve tax lines for an order or cart's line items and shipping methods.
@@ -51,8 +57,9 @@ function normalizeTaxModuleContext(
   orderOrCart: OrderWorkflowDTO | CartWorkflowDTO,
   forceTaxCalculation: boolean,
   isReturn?: boolean,
-  shippingAddress?: OrderWorkflowDTO["shipping_address"]
-): TaxCalculationContext | null {
+  shippingAddress?: OrderWorkflowDTO["shipping_address"],
+  fromLocation?: StockLocationAddressDTO
+): TaxCalculationContextWithFromLocation | null {
   const address = shippingAddress ?? orderOrCart.shipping_address;
   const shouldCalculateTax =
     forceTaxCalculation || orderOrCart.region?.automatic_taxes;
@@ -98,6 +105,7 @@ function normalizeTaxModuleContext(
       shipping_option_id: method.shipping_option_id,
       amount: method.amount,
     })),
+    from_location: fromLocation,
   };
 }
 
@@ -182,12 +190,21 @@ export const getItemTaxLinesStep = createStep(
     ) as OrderLineItemDTO[] | CartLineItemDTO[];
 
     const taxService = container.resolve<ITaxModuleService>(Modules.TAX);
+    const stockLocationService = container.resolve<IStockLocationService>(
+      Modules.STOCK_LOCATION
+    );
+
+    const [stockLocation] = await stockLocationService.listStockLocations(
+      {},
+      { relations: ["address"], take: 1 }
+    );
 
     const taxContext = normalizeTaxModuleContext(
       orderOrCart,
       forceTaxCalculation,
       isReturn,
-      shippingAddress
+      shippingAddress,
+      stockLocation?.address
     );
 
     const stepResponseData = {

@@ -40,8 +40,8 @@ export class ShipStationClient {
           throw new MedusaError(
             MedusaError.Types.INVALID_DATA,
             `An error occured while sending a request to ShipStation: ${resp.errors.map(
-              (error) => error.message
-            )}`
+              (error) => error.message,
+            )}`,
           );
         }
         return resp;
@@ -53,7 +53,7 @@ export class ShipStationClient {
   }
 
   async getShippingRates(
-    data: GetShippingRatesRequest
+    data: GetShippingRatesRequest,
   ): Promise<GetShippingRatesResponse> {
     return await this.sendRequest("/rates", {
       method: "POST",
@@ -63,8 +63,8 @@ export class ShipStationClient {
         throw new MedusaError(
           MedusaError.Types.INVALID_DATA,
           `An error occured while retrieving rates from ShipStation: ${resp.rate_response.errors.map(
-            (error) => error.message
-          )}`
+            (error) => error.message,
+          )}`,
         );
       }
       return resp;

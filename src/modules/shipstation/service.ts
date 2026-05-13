@@ -9,7 +9,10 @@ import {
   CartAddressDTO,
   CartLineItemDTO,
   CreateShippingOptionDTO,
+  FulfillmentDTO,
+  FulfillmentItemDTO,
   FulfillmentOption,
+  FulfillmentOrderDTO,
   OrderLineItemDTO,
   StockLocationAddressDTO,
   ValidateFulfillmentDataContext,
@@ -57,7 +60,7 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
     if (!from_address?.address) {
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
-        "from_location.address is required to calculate shipping rate"
+        "from_location.address is required to calculate shipping rate",
       );
     }
 
@@ -75,7 +78,7 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
     if (!to_address) {
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
-        "shipping_address is required to calculate shipping rate"
+        "shipping_address is required to calculate shipping rate",
       );
     }
 
@@ -91,7 +94,6 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
     };
 
     // Sum the package's weight
-
     // You can instead create different packages for each item
 
     const packageWeight = items.reduce((sum, item) => {
@@ -164,7 +166,7 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
   async calculatePrice(
     optionData: CalculateShippingOptionPriceDTO["optionData"],
     data: CalculateShippingOptionPriceDTO["data"],
-    context: CalculateShippingOptionPriceDTO["context"]
+    context: CalculateShippingOptionPriceDTO["context"],
   ): Promise<CalculatedShippingOptionPrice> {
     const { shipment_id } =
       (data as {
@@ -212,19 +214,17 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
   }
 
   async validateFulfillmentData(
-    optionData: Record<string, unknown>,
-    data: Record<string, unknown>,
-    context: ValidateFulfillmentDataContext
+    optionData: Record<string, unknown> & {
+      carrier_id: string;
+      carrier_service_code: string;
+    },
+    data: Record<string, unknown> & { shipment_id?: string },
+    context: ValidateFulfillmentDataContext,
   ): Promise<any> {
-    let { shipment_id } = data as {
-      shipment_id?: string;
-    };
+    let { shipment_id } = data;
 
     if (!shipment_id) {
-      const { carrier_id, carrier_service_code } = optionData as {
-        carrier_id: string;
-        carrier_service_code: string;
-      };
+      const { carrier_id, carrier_service_code } = optionData;
 
       const shipment = await this.createShipment({
         carrier_id,
@@ -277,10 +277,14 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
   }
 
   async createFulfillment(
-    data: object,
-    items: object[],
-    order: object | undefined,
-    fulfillment: Record<string, unknown>
+    data: Record<string, unknown>,
+    items: Partial<Omit<FulfillmentItemDTO, "fulfillment">>[],
+    order: Partial<FulfillmentOrderDTO> | undefined,
+    fulfillment: Partial<
+      Omit<FulfillmentDTO, "provider_id" | "data" | "items"> & {
+        data: object;
+      }
+    >,
   ): Promise<any> {
     const { shipment_id } = data as {
       shipment_id: string;
@@ -331,12 +335,12 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
     });
 
     const label = await this.client.purchaseLabelForShipment(
-      newShipment.shipment_id
+      newShipment.shipment_id,
     );
 
     return {
       data: {
-        ...((fulfillment.data as object) || {}),
+        ...(fulfillment.data || {}),
         label_id: label.label_id,
         shipment_id: label.shipment_id,
       },
