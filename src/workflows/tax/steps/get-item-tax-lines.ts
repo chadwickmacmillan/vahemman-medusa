@@ -58,7 +58,7 @@ function normalizeTaxModuleContext(
   forceTaxCalculation: boolean,
   isReturn?: boolean,
   shippingAddress?: OrderWorkflowDTO["shipping_address"],
-  fromLocation?: StockLocationAddressDTO
+  fromLocation?: StockLocationAddressDTO,
 ): TaxCalculationContextWithFromLocation | null {
   const address = shippingAddress ?? orderOrCart.shipping_address;
   const shouldCalculateTax =
@@ -71,7 +71,7 @@ function normalizeTaxModuleContext(
   if (forceTaxCalculation && !address?.country_code) {
     throw new MedusaError(
       MedusaError.Types.INVALID_DATA,
-      `country code is required to calculate taxes`
+      `country code is required to calculate taxes`,
     );
   }
 
@@ -111,7 +111,7 @@ function normalizeTaxModuleContext(
 
 function normalizeLineItemsForTax(
   orderOrCart: OrderWorkflowDTO | CartWorkflowDTO,
-  items: OrderLineItemDTO[] | CartLineItemDTO[]
+  items: OrderLineItemDTO[] | CartLineItemDTO[],
 ): TaxableItemDTO[] {
   return items.map(
     (item) =>
@@ -123,13 +123,13 @@ function normalizeLineItemsForTax(
         unit_price: item.unit_price,
         currency_code: orderOrCart.currency_code,
         product_tax_code: item?.product?.tax_code?.code,
-      }) as TaxableItemDTO
+      }) as TaxableItemDTO,
   );
 }
 
 function normalizeLineItemsForShipping(
   orderOrCart: OrderWorkflowDTO | CartWorkflowDTO,
-  shippingMethods: OrderShippingMethodDTO[] | CartShippingMethodDTO[]
+  shippingMethods: OrderShippingMethodDTO[] | CartShippingMethodDTO[],
 ): TaxableShippingDTO[] {
   return shippingMethods.map(
     (shippingMethod) =>
@@ -138,7 +138,7 @@ function normalizeLineItemsForShipping(
         shipping_option_id: shippingMethod.shipping_option_id!,
         unit_price: shippingMethod.amount,
         currency_code: orderOrCart.currency_code,
-      }) as TaxableShippingDTO
+      }) as TaxableShippingDTO,
   );
 }
 
@@ -186,17 +186,17 @@ export const getItemTaxLinesStep = createStep(
     } = data;
 
     const filteredItems = items.filter(
-      (item) => !item.is_giftcard || !isDefined(item.is_giftcard)
+      (item) => !item.is_giftcard || !isDefined(item.is_giftcard),
     ) as OrderLineItemDTO[] | CartLineItemDTO[];
 
     const taxService = container.resolve<ITaxModuleService>(Modules.TAX);
     const stockLocationService = container.resolve<IStockLocationService>(
-      Modules.STOCK_LOCATION
+      Modules.STOCK_LOCATION,
     );
 
     const [stockLocation] = await stockLocationService.listStockLocations(
       {},
-      { relations: ["address"], take: 1 }
+      { relations: ["address"], take: 1 },
     );
 
     const taxContext = normalizeTaxModuleContext(
@@ -204,7 +204,7 @@ export const getItemTaxLinesStep = createStep(
       forceTaxCalculation,
       isReturn,
       shippingAddress,
-      stockLocation?.address
+      stockLocation?.address,
     );
 
     const stepResponseData = {
@@ -219,17 +219,17 @@ export const getItemTaxLinesStep = createStep(
     if (items.length) {
       stepResponseData.lineItemTaxLines = (await taxService.getTaxLines(
         normalizeLineItemsForTax(orderOrCart, filteredItems),
-        taxContext
+        taxContext,
       )) as ItemTaxLineDTO[];
     }
 
     if (shippingMethods.length) {
       stepResponseData.shippingMethodsTaxLines = (await taxService.getTaxLines(
         normalizeLineItemsForShipping(orderOrCart, shippingMethods),
-        taxContext
+        taxContext,
       )) as ShippingTaxLineDTO[];
     }
 
     return new StepResponse(stepResponseData);
-  }
+  },
 );
