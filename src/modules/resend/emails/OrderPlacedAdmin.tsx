@@ -43,15 +43,12 @@ function OrderPlacedAdminEmailComponent({
               Order #{order.display_id} has been placed.
             </Heading>
             <Link
-              href={`/orders/${order.display_id}`}
-              className="mt-2 text-blue-600 no-underline text-[14px] leading-[24px] break-all"
+              href={`${process.env.MEDUSA_BACKEND_URL}/orders/${order.display_id}`}
+              className="mt-2 text-blue-600 no-underline text-[14px] leading-[24px] break-all mx-auto"
             >
               View order
             </Link>
           </Container>
-
-          {/* Footer */}
-          <EmailFooter />
         </EmailBody>
       </Html>
     </Tailwind>
