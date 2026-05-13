@@ -100,11 +100,11 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
       const fromLocation = context.from_location;
 
       const { tax } = await this.client.taxForOrder({
-        from_street: fromLocation?.address_1 ?? "24 Nordica Drive",
-        from_city:   fromLocation?.city       ?? "Croton on Hudson",
-        from_state:  fromLocation?.province   ?? "NY",
-        from_zip:    fromLocation?.postal_code ?? "10520",
-        from_country: fromLocation?.country_code ?? "US",
+        from_street: fromLocation?.address_1 ?? "",
+        from_city: fromLocation?.city ?? "",
+        from_state: fromLocation?.province ?? "",
+        from_zip: fromLocation?.postal_code ?? "",
+        from_country: fromLocation?.country_code ?? "",
         to_country: context.address.country_code ?? "",
         to_zip: context.address.postal_code ?? "",
         to_state: context.address.province_code ?? "",
