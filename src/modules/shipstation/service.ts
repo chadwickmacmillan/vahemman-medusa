@@ -94,26 +94,10 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
     };
 
     // Sum the package's weight
-    // You can instead create different packages for each item
 
     const packageWeight = items.reduce((sum, item) => {
       // @ts-ignore
       return sum + (item.variant.weight || 0);
-    }, 0);
-
-    const packageLength = items.reduce((acc, item) => {
-      // @ts-ignore
-      return Math.max(acc, item.variant.length || 0);
-    }, 0);
-
-    const packageWidth = items.reduce((acc, item) => {
-      // @ts-ignore
-      return Math.max(acc, item.variant.width || 0);
-    }, 0);
-
-    const packageHeight = items.reduce((sum, item) => {
-      // @ts-ignore
-      return sum + (item.variant.height || 0);
     }, 0);
 
     return await this.client.getShippingRates({
@@ -133,12 +117,6 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
             weight: {
               value: packageWeight,
               unit: "ounce",
-            },
-            dimensions: {
-              unit: "inch",
-              length: packageLength,
-              width: packageWidth,
-              height: packageHeight,
             },
           },
         ],
