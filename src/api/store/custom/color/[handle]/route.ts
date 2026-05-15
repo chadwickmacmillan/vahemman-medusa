@@ -11,7 +11,7 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   const service = req.scope.resolve(COLOR_SERVICE) as ColorService;
 
   const [product] = await productModuleService.listProducts(
-    { handle: req.params.productHandle },
+    { handle: req.params.handle },
     { relations: ["options", "variants", "variants.options"], take: 1 },
   );
 
