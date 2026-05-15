@@ -10,7 +10,7 @@ import {
   Body,
   Link,
   Button,
-} from "@react-email/components";
+} from "react-email";
 
 type UserInvitedEmailProps = {
   invite_url: string;

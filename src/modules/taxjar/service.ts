@@ -23,7 +23,6 @@ import {
 } from "taxjar/dist/types/paramTypes";
 import { TAX_CODE_SERVICE } from "../tax_code";
 import TaxCodeService from "../tax_code/service";
-import { TaxCode } from "../tax_code/types";
 
 type InjectedDependencies = {
   logger: Logger;
@@ -97,23 +96,40 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
         return (acc += Number(l.shipping_line.unit_price?.toString()));
       }, 0);
 
-      const fromLocation = context.from_location;
-
-      const { tax } = await this.client.taxForOrder({
-        from_street: fromLocation?.address_1 ?? "",
-        from_city: fromLocation?.city ?? "",
-        from_state: fromLocation?.province ?? "",
-        from_zip: fromLocation?.postal_code ?? "",
-        from_country: fromLocation?.country_code ?? "",
-        to_country: context.address.country_code ?? "",
-        to_zip: context.address.postal_code ?? "",
-        to_state: context.address.province_code ?? "",
-        to_city: context.address.city ?? "",
-        to_street: context.address.address_1 ?? "",
+      const message = `Taxjar tax request: ${JSON.stringify({
+        from_street: context.from_location?.address_1 ?? undefined,
+        from_city: context.from_location?.city ?? undefined,
+        from_state: context.from_location?.province ?? undefined,
+        from_zip: context.from_location?.postal_code ?? undefined,
+        from_country: context.from_location?.country_code ?? undefined,
+        to_country: context.address.country_code ?? undefined,
+        to_zip: context.address.postal_code ?? undefined,
+        to_state: context.address.province_code ?? undefined,
+        to_city: context.address.city ?? undefined,
+        to_street: context.address.address_1 ?? undefined,
         shipping,
         line_items: taxLineItems,
-        customer_id: context.customer?.id ?? "",
+      })}`;
+
+      this.logger_.info(message);
+
+      const { tax } = await this.client.taxForOrder({
+        from_street: context.from_location?.address_1 ?? undefined,
+        from_city: context.from_location?.city ?? undefined,
+        from_state: context.from_location?.province ?? undefined,
+        from_zip: context.from_location?.postal_code ?? undefined,
+        from_country: context.from_location?.country_code ?? undefined,
+        to_country: context.address.country_code ?? undefined,
+        to_zip: context.address.postal_code ?? undefined,
+        to_state: context.address.province_code ?? undefined,
+        to_city: context.address.city ?? undefined,
+        to_street: context.address.address_1 ?? undefined,
+        shipping,
+        line_items: taxLineItems,
+        customer_id: context.customer?.id ?? undefined,
       });
+
+      this.logger_.info(`Taxjar tax response: ${JSON.stringify(tax)}`);
 
       if (!tax.breakdown) {
         throw new MedusaError(

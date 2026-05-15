@@ -5,6 +5,7 @@ import {
 } from "@medusajs/framework/utils";
 import { Modules } from "@medusajs/framework/utils";
 import { TAX_CODE_SERVICE } from "./src/modules/tax_code";
+import { COLOR_SERVICE } from "./src/modules/color";
 
 loadEnv(process.env.NODE_ENV || "development", process.cwd());
 
@@ -188,6 +189,16 @@ module.exports = defineConfig({
         providers: [
           {
             id: "tax_code",
+          },
+        ],
+      },
+    },
+    {
+      resolve: "./src/modules/color",
+      options: {
+        providers: [
+          {
+            id: COLOR_SERVICE,
           },
         ],
       },

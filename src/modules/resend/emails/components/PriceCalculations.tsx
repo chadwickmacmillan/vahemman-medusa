@@ -1,4 +1,4 @@
-import { Column, Row, Text } from "@react-email/components";
+import { Column, Row, Text } from "react-email";
 import formatPrice from "../utils/formatPrice";
 
 const PriceCalculations = ({

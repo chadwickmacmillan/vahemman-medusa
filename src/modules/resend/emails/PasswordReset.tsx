@@ -10,7 +10,7 @@ import {
   Body,
   Link,
   Button,
-} from "@react-email/components";
+} from "react-email";
 
 type PasswordResetEmailProps = {
   reset_url: string;

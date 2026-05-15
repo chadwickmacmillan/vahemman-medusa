@@ -9,7 +9,7 @@ import {
   Head,
   Preview,
   Link,
-} from "@react-email/components";
+} from "react-email";
 import {
   BigNumberValue,
   CustomerDTO,

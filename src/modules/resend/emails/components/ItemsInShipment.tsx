@@ -1,4 +1,4 @@
-import { Column, Heading, Row, Section, Text } from "@react-email/components";
+import { Column, Heading, Row, Section, Text } from "react-email";
 
 import {
   OrderLineItemDTO,

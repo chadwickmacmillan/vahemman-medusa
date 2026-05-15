@@ -6,7 +6,7 @@ import {
   Tailwind,
   Head,
   Preview,
-} from "@react-email/components";
+} from "react-email";
 import { CustomerDTO, OrderDTO, ProductDTO } from "@medusajs/framework/types";
 import OrderSummary from "./components/OrderSummary";
 import EmailHeader from "./components/EmailHeader";

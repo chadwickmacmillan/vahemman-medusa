@@ -9,7 +9,7 @@ import { AssignTaxCode } from "../../../validators";
 import { TAX_CODE_SERVICE } from "../../../../../modules/tax_code";
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
-  const productId = req.params.productId;
+  const productId = req.params.id;
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const { data } = await query.graph({
@@ -28,9 +28,9 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 
 export async function POST(
   req: MedusaRequest<AssignTaxCode>,
-  res: MedusaResponse
+  res: MedusaResponse,
 ) {
-  const productId = req.params.productId;
+  const productId = req.params.id;
 
   const link = req.scope.resolve(ContainerRegistrationKeys.LINK);
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);

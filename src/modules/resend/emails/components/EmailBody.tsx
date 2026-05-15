@@ -1,4 +1,4 @@
-import { Body } from "@react-email/components";
+import { Body } from "react-email";
 import { ReactNode } from "react";
 
 const EmailBody = ({ children }: { children: ReactNode }) => {

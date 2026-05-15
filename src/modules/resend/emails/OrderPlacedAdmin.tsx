@@ -7,7 +7,7 @@ import {
   Head,
   Preview,
   Link,
-} from "@react-email/components";
+} from "react-email";
 import { CustomerDTO, OrderDTO, ProductDTO } from "@medusajs/framework/types";
 import EmailHeader from "./components/EmailHeader";
 import EmailFooter from "./components/EmailFooter";

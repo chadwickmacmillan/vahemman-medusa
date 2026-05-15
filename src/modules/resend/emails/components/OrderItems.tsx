@@ -1,4 +1,4 @@
-import { Column, Img, Row, Section, Text } from "@react-email/components";
+import { Column, Img, Row, Section, Text } from "react-email";
 import { ProductDTO, type OrderLineItemDTO } from "@medusajs/framework/types";
 import formatPrice from "../utils/formatPrice";
 
@@ -15,10 +15,10 @@ const OrderItems = ({
     <>
       {items.map((item) => {
         const product = products.find(
-          (product) => product.id === item.product_id
+          (product) => product.id === item.product_id,
         );
         const variant = product?.variants.find(
-          (variant) => variant.id === item.variant_id
+          (variant) => variant.id === item.variant_id,
         );
         return (
           <>
