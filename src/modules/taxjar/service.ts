@@ -96,23 +96,6 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
         return (acc += Number(l.shipping_line.unit_price?.toString()));
       }, 0);
 
-      const message = `Taxjar tax request: ${JSON.stringify({
-        from_street: context.from_location?.address_1 ?? undefined,
-        from_city: context.from_location?.city ?? undefined,
-        from_state: context.from_location?.province ?? undefined,
-        from_zip: context.from_location?.postal_code ?? undefined,
-        from_country: context.from_location?.country_code ?? undefined,
-        to_country: context.address.country_code ?? undefined,
-        to_zip: context.address.postal_code ?? undefined,
-        to_state: context.address.province_code ?? undefined,
-        to_city: context.address.city ?? undefined,
-        to_street: context.address.address_1 ?? undefined,
-        shipping,
-        line_items: taxLineItems,
-      })}`;
-
-      this.logger_.info(message);
-
       const { tax } = await this.client.taxForOrder({
         from_street: context.from_location?.address_1 ?? undefined,
         from_city: context.from_location?.city ?? undefined,
@@ -130,13 +113,6 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
       });
 
       this.logger_.info(`Taxjar tax response: ${JSON.stringify(tax)}`);
-
-      if (!tax.breakdown) {
-        throw new MedusaError(
-          MedusaError.Types.INVALID_DATA,
-          "Taxjar did not return tax breakdown",
-        );
-      }
 
       const itemTaxLines: TaxTypes.ItemTaxLineDTO[] =
         tax.breakdown?.line_items?.map((item) => {
