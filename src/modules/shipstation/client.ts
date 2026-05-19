@@ -40,7 +40,7 @@ export class ShipStationClient {
           throw new MedusaError(
             MedusaError.Types.INVALID_DATA,
             `An error occured while sending a request to ShipStation: ${resp.errors.map(
-              (error) => error.message,
+              (error: { message: string }) => error.message,
             )}`,
           );
         }

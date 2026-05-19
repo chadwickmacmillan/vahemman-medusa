@@ -32,7 +32,7 @@ export default async function seedTaxCodes({ container }: ExecArgs) {
       }),
     );
     logger.log(`Created ${categories.length} entries!`);
-  } catch (error: Error) {
+  } catch (error: unknown) {
     throw new MedusaError(
       MedusaErrorTypes.INVALID_DATA,
       "Unable to seed tax codes",

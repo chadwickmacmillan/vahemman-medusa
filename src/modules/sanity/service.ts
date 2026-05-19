@@ -141,7 +141,7 @@ class SanityModuleService {
     id: string,
     config: { explicit_type?: boolean } = {}
   ) {
-    const resolvedType = config.explicit_type ? type : this.typeMap[type];
+    const resolvedType = config.explicit_type ? type : (this.typeMap as Record<string, string>)[type];
     if (!this.studioUrl) {
       throw new Error("No studio URL provided");
     }

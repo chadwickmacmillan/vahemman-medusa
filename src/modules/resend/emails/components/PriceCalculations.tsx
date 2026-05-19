@@ -1,4 +1,5 @@
 import { Column, Row, Text } from "react-email";
+import { BigNumberValue } from "@medusajs/framework/types";
 import formatPrice from "../utils/formatPrice";
 
 const PriceCalculations = ({
@@ -8,10 +9,10 @@ const PriceCalculations = ({
   total,
   currencyCode,
 }: {
-  subtotal?: number;
-  taxTotal?: number;
-  shippingTotal?: number;
-  total?: number;
+  subtotal?: BigNumberValue;
+  taxTotal?: BigNumberValue;
+  shippingTotal?: BigNumberValue;
+  total?: BigNumberValue;
   currencyCode: string;
 }) => {
   return (

@@ -270,7 +270,7 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
 
     const originalShipment = await this.client.getShipment(shipment_id);
 
-    const orderItemsToFulfill = [];
+    const orderItemsToFulfill: any[] = [];
 
     items.map((item) => {
       // @ts-ignore
