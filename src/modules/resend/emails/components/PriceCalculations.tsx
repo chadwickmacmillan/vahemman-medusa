@@ -7,6 +7,12 @@ const PriceCalculations = ({
   shippingTotal,
   total,
   currencyCode,
+}: {
+  subtotal?: number;
+  taxTotal?: number;
+  shippingTotal?: number;
+  total?: number;
+  currencyCode: string;
 }) => {
   return (
     <>

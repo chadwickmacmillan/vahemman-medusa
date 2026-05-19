@@ -1,6 +1,6 @@
 import { type BigNumberValue } from "@medusajs/framework/types";
 
-const formatPrice = (price: BigNumberValue, currencyCode: string) => {
+const formatPrice = (price: BigNumberValue, currencyCode?: string) => {
   const formatter = new Intl.NumberFormat([], {
     style: "currency",
     currencyDisplay: "narrowSymbol",

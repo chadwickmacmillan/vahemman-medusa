@@ -10,12 +10,12 @@ export default async function seedTaxCodes({ container }: ExecArgs) {
     if (!process.env.TAXJAR_API_KEY) {
       throw new MedusaError(
         MedusaErrorTypes.INVALID_DATA,
-        "Taxjar API Key not found"
+        "Taxjar API Key not found",
       );
     }
 
     const taxCodeService = container.resolve(
-      TAX_CODE_SERVICE
+      TAX_CODE_SERVICE,
     ) as TaxCodeService;
 
     const taxjarClient = new Taxjar({ apiKey: process.env.TAXJAR_API_KEY });
@@ -29,14 +29,14 @@ export default async function seedTaxCodes({ container }: ExecArgs) {
           description: category.description,
           code: category.product_tax_code,
         };
-      })
+      }),
     );
     logger.log(`Created ${categories.length} entries!`);
-  } catch (error) {
+  } catch (error: Error) {
     throw new MedusaError(
       MedusaErrorTypes.INVALID_DATA,
       "Unable to seed tax codes",
-      error
+      error,
     );
   }
 }

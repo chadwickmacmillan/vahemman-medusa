@@ -14,7 +14,7 @@ import {
 export class ShipStationClient {
   options: ShipStationOptions;
 
-  constructor(options) {
+  constructor(options: ShipStationOptions) {
     this.options = options;
   }
 
@@ -63,7 +63,7 @@ export class ShipStationClient {
         throw new MedusaError(
           MedusaError.Types.INVALID_DATA,
           `An error occured while retrieving rates from ShipStation: ${resp.rate_response.errors.map(
-            (error) => error.message,
+            (error: Error) => error.message,
           )}`,
         );
       }

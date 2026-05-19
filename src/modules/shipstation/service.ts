@@ -306,7 +306,8 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
         city: originalShipment.ship_to.city_locality,
         province: originalShipment.ship_to.state_province,
       },
-      items: orderItemsToFulfill as OrderLineItemDTO[],
+      // @ts-ignore
+      items: orderItemsToFulfill,
 
       // @ts-ignore
       currency_code: order.currency_code,

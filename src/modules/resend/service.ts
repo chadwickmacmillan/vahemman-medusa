@@ -40,14 +40,13 @@ enum Templates {
   USER_INVITED = "user-invited",
 }
 
-const templates: { [key in Templates]?: (props: unknown) => React.ReactNode } =
-  {
-    [Templates.ORDER_PLACED]: orderPlacedEmail,
-    [Templates.ORDER_PLACED_ADMIN]: orderPlacedAdminEmail,
-    [Templates.SHIPMENT_CREATED]: shipmentCreatedEmail,
-    [Templates.PASSWORD_RESET]: passwordResetEmail,
-    [Templates.USER_INVITED]: userInvitedEmail,
-  };
+const templates = {
+  [Templates.ORDER_PLACED]: orderPlacedEmail,
+  [Templates.ORDER_PLACED_ADMIN]: orderPlacedAdminEmail,
+  [Templates.SHIPMENT_CREATED]: shipmentCreatedEmail,
+  [Templates.PASSWORD_RESET]: passwordResetEmail,
+  [Templates.USER_INVITED]: userInvitedEmail,
+};
 
 class ResendNotificationProviderService extends AbstractNotificationProviderService {
   static identifier = "notification-resend";
@@ -149,6 +148,7 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
     } else {
       emailOptions = {
         ...commonOptions,
+        // @ts-ignore
         react: template(notification.data),
       };
     }

@@ -122,6 +122,7 @@ function normalizeLineItemsForTax(
         quantity: item.quantity,
         unit_price: item.unit_price,
         currency_code: orderOrCart.currency_code,
+        // @ts-ignore
         product_tax_code: item?.product?.tax_code?.code,
       }) as TaxableItemDTO,
   );
