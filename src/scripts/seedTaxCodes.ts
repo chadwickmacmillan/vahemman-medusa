@@ -36,7 +36,7 @@ export default async function seedTaxCodes({ container }: ExecArgs) {
     throw new MedusaError(
       MedusaErrorTypes.INVALID_DATA,
       "Unable to seed tax codes",
-      error,
+      error instanceof Error ? error.message : String(error),
     );
   }
 }
