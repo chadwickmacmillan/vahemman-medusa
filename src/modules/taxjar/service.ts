@@ -115,7 +115,7 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
       this.logger_.info(`Taxjar tax response: ${JSON.stringify(tax)}`);
 
       const itemTaxLines: TaxTypes.ItemTaxLineDTO[] =
-        tax.breakdown?.line_items?.map((item) => {
+        tax?.breakdown?.line_items?.map((item) => {
           const itemVal = taxLineItems.find((i) => i.id === item.id);
           return {
             line_item_id: item.id ?? "",
@@ -134,7 +134,7 @@ class TaxjarTaxModuleProvider implements ITaxProvider {
             name: "shipping",
             provider_id: this.getIdentifier(),
             rate: tax.freight_taxable
-              ? (tax.breakdown?.shipping?.combined_tax_rate ?? 0) * 100 // Fraction to percent conversion
+              ? (tax?.breakdown?.shipping?.combined_tax_rate ?? 0) * 100 // Fraction to percent conversion
               : 0,
           };
         },
