@@ -1,8 +1,4 @@
-import {
-  loadEnv,
-  defineConfig,
-  ContainerRegistrationKeys,
-} from "@medusajs/framework/utils";
+import { loadEnv, defineConfig } from "@medusajs/framework/utils";
 import { Modules } from "@medusajs/framework/utils";
 import { TAX_CODE_SERVICE } from "./src/modules/tax_code";
 import { COLOR_SERVICE } from "./src/modules/color";
