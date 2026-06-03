@@ -31,7 +31,7 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
     ),
   );
 
-  const colors = await colorService.listColors();
+  const colors = await colorService.listColors({ name: productColors });
 
   res.status(200).json({
     colors,

@@ -9,7 +9,6 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   const color = await service.retrieveColor(req.params.id, {
     withDeleted: true,
   });
-
   res.status(200).json(color);
 };
 

@@ -9,8 +9,9 @@ import {
   Drawer,
   IconButton,
 } from "@medusajs/ui";
-import { ArrowPath, PlusMini } from "@medusajs/icons";
+import { PlusMini } from "@medusajs/icons";
 import { z } from "@medusajs/framework/zod";
+import { useEffect } from "react";
 
 import {
   useCreateColorMutation,
@@ -184,7 +185,7 @@ const ProductFashionWidget = ({ data }: DetailWidgetProps<AdminProduct>) => {
         ) : productColors.isError ? (
           <Text>Error loading product materials</Text>
         ) : productColors.isSuccess && productColors.data ? (
-          <div className="flex flex-row gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-2 gap-y-4">
             {productColors.data.colors.map((color) => (
               <div key={color.id} className="flex flex-col items-center gap-1">
                 <EditColorDrawer
