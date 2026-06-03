@@ -1,4 +1,8 @@
-import { loadEnv, defineConfig } from "@medusajs/framework/utils";
+import {
+  loadEnv,
+  defineConfig,
+  ContainerRegistrationKeys,
+} from "@medusajs/framework/utils";
 import { Modules } from "@medusajs/framework/utils";
 import { TAX_CODE_SERVICE } from "./src/modules/tax_code";
 import { COLOR_SERVICE } from "./src/modules/color";
@@ -212,6 +216,7 @@ module.exports = defineConfig({
     },
     {
       resolve: "@medusajs/medusa/auth",
+      dependencies: [Modules.CACHE, ContainerRegistrationKeys.LOGGER],
       options: {
         providers: [
           {
@@ -219,6 +224,9 @@ module.exports = defineConfig({
             id: "emailpass",
           },
         ],
+        mfa: {
+          encryption_key: process.env.AUTH_MFA_ENCRYPTION_KEY,
+        },
       },
     },
   ],
