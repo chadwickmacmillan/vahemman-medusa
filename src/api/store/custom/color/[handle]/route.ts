@@ -1,6 +1,9 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework";
 import { Modules } from "@medusajs/framework/utils";
-import { IProductModuleService } from "@medusajs/framework/types";
+import {
+  IFileModuleService,
+  IProductModuleService,
+} from "@medusajs/framework/types";
 import { COLOR_SERVICE } from "../../../../../modules/color";
 import ColorService from "../../../../../modules/color/service";
 
@@ -31,8 +34,18 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
 
   const colors = await service.listColors({ name: productColors });
 
+  const fileService = req.scope.resolve(Modules.FILE) as IFileModuleService;
+
+  const colorsWithUrl = await Promise.all(
+    colors.map(async (color) => {
+      if (!color.media) return color;
+      const file = await fileService.retrieveFile(color.media);
+      return { ...color, media_url: file.url };
+    }),
+  );
+
   res.status(200).json({
-    colors,
+    colors: colorsWithUrl,
     missing_colors: productColors.filter(
       (name) => !colors.some((color) => color.name === name),
     ),

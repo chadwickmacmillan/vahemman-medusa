@@ -1,43 +1,238 @@
-import * as React from "react";
+import { InformationCircleSolid } from "@medusajs/icons";
 import {
+  Hint as HintComponent,
+  Label as LabelComponent,
+  Text,
+  Tooltip,
+  clx,
+} from "@medusajs/ui";
+import { Label as RadixLabel, Slot } from "radix-ui";
+import React, {
+  ReactNode,
+  createContext,
+  forwardRef,
+  useContext,
+  useId,
+} from "react";
+import {
+  Controller,
+  ControllerProps,
+  FieldPath,
+  FieldValues,
   FormProvider,
-  useForm,
-  UseFormProps,
-  DefaultValues,
-  SubmitHandler,
+  useFormContext,
+  useFormState,
 } from "react-hook-form";
-import { z } from "@medusajs/framework/zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
-export type FormProps<T extends z.ZodType<any, any>> = UseFormProps<
-  z.infer<T>
-> & {
-  schema: T;
-  onSubmit: SubmitHandler<z.infer<T>>;
-  defaultValues?: DefaultValues<z.infer<T>>;
-  children?: React.ReactNode;
-  formProps?: Omit<React.ComponentProps<"form">, "onSubmit">;
+const Provider = FormProvider;
+
+type FormFieldContextValue<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+> = {
+  name: TName;
 };
 
-export const Form = <T extends z.ZodType<any, any>>({
-  schema,
-  onSubmit,
-  children,
-  defaultValues,
-  formProps,
-  ...props
-}: FormProps<T>) => {
-  const methods = useForm({
-    resolver: zodResolver(schema),
-    defaultValues,
-    ...props,
-  });
+const FormFieldContext = createContext<FormFieldContextValue>(
+  {} as FormFieldContextValue,
+);
 
+const Field = <
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+>({
+  ...props
+}: ControllerProps<TFieldValues, TName>) => {
   return (
-    <FormProvider {...methods}>
-      <form {...formProps} onSubmit={methods.handleSubmit(onSubmit)}>
-        {children}
-      </form>
-    </FormProvider>
+    <FormFieldContext.Provider value={{ name: props.name }}>
+      <Controller {...props} />
+    </FormFieldContext.Provider>
   );
 };
+
+type FormItemContextValue = {
+  id: string;
+};
+
+const FormItemContext = createContext<FormItemContextValue>(
+  {} as FormItemContextValue,
+);
+
+const useFormField = () => {
+  const fieldContext = useContext(FormFieldContext);
+  const itemContext = useContext(FormItemContext);
+  const { getFieldState } = useFormContext();
+
+  const formState = useFormState({ name: fieldContext.name });
+  const fieldState = getFieldState(fieldContext.name, formState);
+
+  if (!fieldContext) {
+    throw new Error("useFormField should be used within a FormField");
+  }
+
+  const { id } = itemContext;
+
+  return {
+    id,
+    name: fieldContext.name,
+    formItemId: `${id}-form-item`,
+    formLabelId: `${id}-form-item-label`,
+    formDescriptionId: `${id}-form-item-description`,
+    formErrorMessageId: `${id}-form-item-message`,
+    ...fieldState,
+  };
+};
+
+const Item = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    const id = useId();
+
+    return (
+      <FormItemContext.Provider value={{ id }}>
+        <div
+          ref={ref}
+          className={clx("flex flex-col space-y-2", className)}
+          {...props}
+        />
+      </FormItemContext.Provider>
+    );
+  },
+);
+Item.displayName = "Form.Item";
+
+const Label = forwardRef<
+  React.ElementRef<typeof RadixLabel.Root>,
+  React.ComponentPropsWithoutRef<typeof RadixLabel.Root> & {
+    variant?: "default" | "subtle";
+    optional?: boolean;
+    tooltip?: ReactNode;
+    icon?: ReactNode;
+  }
+>(
+  (
+    {
+      className,
+      optional = false,
+      tooltip,
+      icon,
+      variant = "default",
+      ...props
+    },
+    ref,
+  ) => {
+    const { formLabelId, formItemId } = useFormField();
+
+    return (
+      <div className="flex items-center gap-x-1">
+        <LabelComponent
+          id={formLabelId}
+          ref={ref}
+          className={clx(
+            {
+              "text-ui-fg-subtle": variant === "subtle",
+            },
+            className,
+          )}
+          htmlFor={formItemId}
+          size="small"
+          weight={variant === "default" ? "plus" : "regular"}
+          {...props}
+        />
+        {tooltip && (
+          <Tooltip content={tooltip}>
+            <InformationCircleSolid className="text-ui-fg-muted" />
+          </Tooltip>
+        )}
+        {icon}
+        {optional && (
+          <Text size="small" leading="compact" className="text-ui-fg-muted">
+            (Optional)
+          </Text>
+        )}
+      </div>
+    );
+  },
+);
+Label.displayName = "Form.Label";
+
+const Control = forwardRef<
+  React.ElementRef<typeof Slot.Root>,
+  React.ComponentPropsWithoutRef<typeof Slot.Root>
+>(({ ...props }, ref) => {
+  const {
+    error,
+    formItemId,
+    formDescriptionId,
+    formErrorMessageId,
+    formLabelId,
+  } = useFormField();
+
+  return (
+    <Slot.Root
+      ref={ref}
+      id={formItemId}
+      aria-describedby={
+        !error
+          ? `${formDescriptionId}`
+          : `${formDescriptionId} ${formErrorMessageId}`
+      }
+      aria-invalid={!!error}
+      aria-labelledby={formLabelId}
+      {...props}
+    />
+  );
+});
+Control.displayName = "Form.Control";
+
+const Hint = forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => {
+  const { formDescriptionId } = useFormField();
+
+  return (
+    <HintComponent
+      ref={ref}
+      id={formDescriptionId}
+      className={className}
+      {...props}
+    />
+  );
+});
+Hint.displayName = "Form.Hint";
+
+const ErrorMessage = forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, children, ...props }, ref) => {
+  const { error, formErrorMessageId } = useFormField();
+  const msg = error ? String(error?.message) : children;
+
+  if (!msg || msg === "undefined") {
+    return null;
+  }
+
+  return (
+    <HintComponent
+      ref={ref}
+      id={formErrorMessageId}
+      className={className}
+      variant={error ? "error" : "info"}
+      {...props}
+    >
+      {msg}
+    </HintComponent>
+  );
+});
+ErrorMessage.displayName = "Form.ErrorMessage";
+
+const Form = Object.assign(Provider, {
+  Item,
+  Label,
+  Control,
+  Hint,
+  ErrorMessage,
+  Field,
+});
+
+export { Form };

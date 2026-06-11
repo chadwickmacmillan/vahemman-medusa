@@ -8,10 +8,12 @@ import {
   Button,
   Drawer,
   IconButton,
+  toast,
+  Input,
 } from "@medusajs/ui";
 import { PlusMini } from "@medusajs/icons";
 import { z } from "@medusajs/framework/zod";
-import { useEffect } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
   useCreateColorMutation,
@@ -19,21 +21,23 @@ import {
   useUpdateColorMutation,
 } from "../hooks/color";
 import { Form } from "../components/Form";
-import FormField from "../components/FormField";
-
-const addColorFormSchema = z.object({
-  name: z.string().min(1),
-  hex_code: z.string().min(7).max(7),
-});
+import {
+  SubmitErrorHandler,
+  SubmitHandler,
+  useFieldArray,
+  useForm,
+} from "react-hook-form";
+import { UploadMediaFormItem } from "../components/UploadMediaFormItem";
+import { addColorFormSchema, editColorFormSchema } from "../schemas/color";
 
 const AddColorDrawer = ({
-  name,
   children,
   onColorAdd,
+  initialValues,
 }: {
-  name: string;
   children: React.ReactNode;
   onColorAdd?: () => void;
+  initialValues: z.infer<typeof addColorFormSchema>;
 }) => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const createColorMutation = useCreateColorMutation({
@@ -43,6 +47,25 @@ const AddColorDrawer = ({
     },
   });
 
+  const form = useForm<z.infer<typeof addColorFormSchema>>({
+    defaultValues: initialValues,
+    resolver: zodResolver(addColorFormSchema),
+  });
+
+  const handleSubmit: SubmitHandler<z.infer<typeof addColorFormSchema>> = (
+    values,
+  ) => {
+    //@ts-ignore
+    createColorMutation.mutate(values);
+  };
+
+  const handleError: SubmitErrorHandler<z.infer<typeof addColorFormSchema>> = (
+    errors,
+  ) => {
+    console.error(errors);
+    toast.error("There was an error saving the color. Please try again.");
+  };
+
   return (
     <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
       <Drawer.Trigger asChild>{children}</Drawer.Trigger>
@@ -51,31 +74,50 @@ const AddColorDrawer = ({
           <Drawer.Title>Add new color</Drawer.Title>
         </Drawer.Header>
         <Drawer.Body className="p-4">
-          <Form
-            schema={addColorFormSchema}
-            onSubmit={async (values) => {
-              createColorMutation.mutate(values);
-            }}
-            defaultValues={{
-              name,
-            }}
-            formProps={{
-              id: `add-color-${name.toLowerCase().replace(/[^\w]/g, "-")}`,
-            }}
-          >
-            <div className="flex flex-col gap-4">
-              <fieldset disabled>
-                <FormField name="name" label="Name" />
-              </fieldset>
-              <FormField
-                name="hex_code"
-                label="Hex code"
-                type="color"
-                inputProps={{
-                  className: "max-w-8",
-                }}
-              />
-            </div>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSubmit, handleError)}
+              id={`add-color-${form.getValues("name")?.toLowerCase().replace(/[^\w]/g, "-")}`}
+            >
+              <div className="flex flex-col gap-4">
+                <Form.Field
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => {
+                    return (
+                      <Form.Item>
+                        <Form.Label>Name</Form.Label>
+                        <Form.Control>
+                          <Input {...field} />
+                        </Form.Control>
+                        <Form.ErrorMessage />
+                      </Form.Item>
+                    );
+                  }}
+                />
+                <Form.Field
+                  control={form.control}
+                  name="hex_code"
+                  render={({ field: { onChange, value, name } }) => {
+                    return (
+                      <Form.Item>
+                        <Form.Label>Name</Form.Label>
+                        <Form.Control>
+                          <input
+                            name={name}
+                            type="color"
+                            onChange={onChange}
+                            value={value ?? ""}
+                          />
+                        </Form.Control>
+                        <Form.ErrorMessage />
+                      </Form.Item>
+                    );
+                  }}
+                />
+                <UploadMediaFormItem form={form} singleton />
+              </div>
+            </form>
           </Form>
         </Drawer.Body>
         <Drawer.Footer>
@@ -84,7 +126,7 @@ const AddColorDrawer = ({
           </Drawer.Close>
           <Button
             type="submit"
-            form={`add-color-${name.toLowerCase().replace(/[^\w]/g, "-")}`}
+            form={`add-color-${form.getValues("name")?.toLowerCase().replace(/[^\w]/g, "-")}`}
             isLoading={createColorMutation.isPending}
             disabled={createColorMutation.isPending}
           >
@@ -98,23 +140,51 @@ const AddColorDrawer = ({
 
 const EditColorDrawer = ({
   id,
-  name,
-  hexCode,
+  initialValues,
   children,
   onColorEdit,
+  initialImage,
 }: {
   id: string;
-  name: string;
-  hexCode: string;
+  initialValues: z.infer<typeof editColorFormSchema>;
   children: React.ReactNode;
   onColorEdit?: () => void;
+  initialImage?: string;
 }) => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const [mediaChanged, setMediaChanged] = React.useState(false);
   const updateColorMutation = useUpdateColorMutation(id, {
     onSuccess: () => {
       setIsDrawerOpen(false);
       onColorEdit?.();
     },
+  });
+
+  const form = useForm<z.infer<typeof editColorFormSchema>>({
+    defaultValues: initialValues,
+    resolver: zodResolver(editColorFormSchema),
+  });
+
+  const handleSubmit: SubmitHandler<z.infer<typeof editColorFormSchema>> = (
+    values,
+  ) => {
+    updateColorMutation.mutate({
+      ...values,
+      mediaChange: mediaChanged,
+    });
+  };
+
+  const handleError: SubmitErrorHandler<z.infer<typeof editColorFormSchema>> = (
+    errors,
+  ) => {
+    console.error(errors);
+    toast.error("There was an error saving the color. Please try again.");
+  };
+
+  const { append, delete: deleteItem } = useFieldArray({
+    name: "media",
+    control: form.control,
+    keyName: "field_id",
   });
 
   return (
@@ -125,32 +195,57 @@ const EditColorDrawer = ({
           <Drawer.Title>Edit color</Drawer.Title>
         </Drawer.Header>
         <Drawer.Body className="p-4">
-          <Form
-            schema={addColorFormSchema}
-            onSubmit={async (values) => {
-              updateColorMutation.mutate(values);
-            }}
-            defaultValues={{
-              name,
-              hex_code: hexCode,
-            }}
-            formProps={{
-              id: `edit-color-${name.toLowerCase().replace(/[^\w]/g, "-")}`,
-            }}
-          >
-            <div className="flex flex-col gap-4">
-              <fieldset disabled>
-                <FormField name="name" label="Name" />
-              </fieldset>
-              <FormField
-                name="hex_code"
-                label="Hex code"
-                type="color"
-                inputProps={{
-                  className: "max-w-8",
-                }}
-              />
-            </div>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSubmit, handleError)}
+              id={`edit-color-${form.getValues("name")?.toLowerCase().replace(/[^\w]/g, "-")}`}
+            >
+              <div className="flex flex-col gap-4">
+                <Form.Field
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => {
+                    return (
+                      <Form.Item>
+                        <Form.Label>Name</Form.Label>
+                        <Form.Control>
+                          <Input {...field} />
+                        </Form.Control>
+                        <Form.ErrorMessage />
+                      </Form.Item>
+                    );
+                  }}
+                />
+                <Form.Field
+                  control={form.control}
+                  name="hex_code"
+                  render={({ field: { onChange, value, name } }) => {
+                    return (
+                      <Form.Item>
+                        <Form.Label>Hex code</Form.Label>
+                        <Form.Control>
+                          <input
+                            name={name}
+                            type="color"
+                            onChange={onChange}
+                            value={value ?? ""}
+                          />
+                        </Form.Control>
+                        <Form.ErrorMessage />
+                      </Form.Item>
+                    );
+                  }}
+                />
+                <UploadMediaFormItem
+                  form={form}
+                  append={append}
+                  delete={deleteItem}
+                  initialImage={initialImage}
+                  singleton
+                  onChanged={() => setMediaChanged(true)}
+                />
+              </div>
+            </form>
           </Form>
         </Drawer.Body>
         <Drawer.Footer>
@@ -159,7 +254,7 @@ const EditColorDrawer = ({
           </Drawer.Close>
           <Button
             type="submit"
-            form={`edit-color-${name.toLowerCase().replace(/[^\w]/g, "-")}`}
+            form={`edit-color-${form.getValues("name")?.toLowerCase().replace(/[^\w]/g, "-")}`}
             isLoading={updateColorMutation.isPending}
             disabled={updateColorMutation.isPending}
           >
@@ -189,15 +284,22 @@ const ProductFashionWidget = ({ data }: DetailWidgetProps<AdminProduct>) => {
             {productColors.data.colors.map((color) => (
               <div key={color.id} className="flex flex-col items-center gap-1">
                 <EditColorDrawer
-                  name={color.name}
+                  initialValues={{
+                    name: color.name,
+                    hex_code: color.hex_code,
+                    media: [],
+                  }}
+                  initialImage={color.media_url}
                   id={color.id}
-                  hexCode={color.hex_code}
                 >
                   <IconButton
                     variant="transparent"
-                    style={{ backgroundColor: color.hex_code }}
-                    className="w-10 h-10 border-2 border-grayscale-40 rounded-full"
-                  />
+                    style={{
+                      backgroundColor: color.hex_code,
+                      backgroundImage: `url(${color.media_url})`,
+                    }}
+                    className="w-10 h-10 border-2 border-grayscale-40 rounded-full bg-cover bg-center"
+                  ></IconButton>
                 </EditColorDrawer>
                 <Text size="xsmall" leading="compact" className="text-center">
                   {color.name}
@@ -207,7 +309,7 @@ const ProductFashionWidget = ({ data }: DetailWidgetProps<AdminProduct>) => {
             {productColors.data.missing_colors.map((color) => (
               <div key={color} className="flex flex-col items-center gap-1">
                 <AddColorDrawer
-                  name={color}
+                  initialValues={{ name: color, hex_code: null, media: [] }}
                   onColorAdd={() => productColors.refetch()}
                 >
                   <IconButton

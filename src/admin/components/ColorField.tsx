@@ -5,7 +5,7 @@ import {
 } from "react-aria-components/ColorField";
 import { tv } from "tailwind-variants";
 import { composeTailwindRenderProps, focusRing } from "./utils";
-import FormField from "./FormField";
+import FormField from "./Input";
 
 export interface ColorFieldProps extends AriaColorFieldProps {
   label?: string;

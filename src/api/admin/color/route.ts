@@ -1,5 +1,7 @@
 import { z } from "@medusajs/framework/zod";
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework";
+import { Modules } from "@medusajs/framework/utils";
+import { IFileModuleService } from "@medusajs/framework/types";
 import { COLOR_SERVICE } from "../../../modules/color";
 import ColorService from "../../../modules/color/service";
 
@@ -28,18 +30,26 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
 
   const last_page = Math.ceil(count / 20);
 
-  res.status(200).json({ colors, count, page, last_page });
+  const fileService = req.scope.resolve(Modules.FILE) as IFileModuleService;
+
+  const colorsWithUrl = await Promise.all(
+    colors.map(async (color) => {
+      if (!color.media) return color;
+      const file = await fileService.retrieveFile(color.media);
+      return { ...color, media_url: file.url };
+    }),
+  );
+
+  res.status(200).json({ colors: colorsWithUrl, count, page, last_page });
 };
 
 const createColorBodySchema = z.object({
-  name: z.string().min(1),
+  name: z.string(),
   hex_code: z
     .string()
-    .min(1)
     .transform((val) => val.toUpperCase())
-    .refine((val) => /^#([A-F0-9]{6}|[A-F0-9]{3})$/.test(val), {
-      message: "Invalid hex code",
-    }),
+    .nullable(),
+  media: z.string().nullable(),
 });
 
 export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
