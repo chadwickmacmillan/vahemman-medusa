@@ -66,6 +66,12 @@ const AddColorDrawer = ({
     toast.error("There was an error saving the color. Please try again.");
   };
 
+  const { append, delete: deleteItem } = useFieldArray({
+    name: "media",
+    control: form.control,
+    keyName: "field_id",
+  });
+
   return (
     <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
       <Drawer.Trigger asChild>{children}</Drawer.Trigger>
@@ -101,7 +107,7 @@ const AddColorDrawer = ({
                   render={({ field: { onChange, value, name } }) => {
                     return (
                       <Form.Item>
-                        <Form.Label>Name</Form.Label>
+                        <Form.Label>Hex Code</Form.Label>
                         <Form.Control>
                           <input
                             name={name}
@@ -115,7 +121,7 @@ const AddColorDrawer = ({
                     );
                   }}
                 />
-                <UploadMediaFormItem form={form} singleton />
+                <UploadMediaFormItem form={form} singleton append={append} />
               </div>
             </form>
           </Form>
