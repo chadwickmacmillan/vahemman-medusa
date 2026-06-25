@@ -395,7 +395,12 @@ const ColorPage = () => {
                           );
                         }}
                       />
-                      <UploadMediaFormItem form={form} append={append} delete={deleteItem} singleton />
+                      <UploadMediaFormItem
+                        form={form}
+                        append={append}
+                        delete={deleteItem}
+                        singleton
+                      />
                     </div>
                   </form>
                 </Form>
@@ -457,11 +462,20 @@ const ColorPage = () => {
                   <Table.Cell>{color.name}</Table.Cell>
                   <Table.Cell>
                     <Kbd className="flex flex-row gap-1 items-center font-mono">
-                      <div
-                        className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: `${color.hex_code}` }}
-                      />
-                      {color.hex_code}
+                      {color.media_url ? (
+                        <div
+                          className="w-5 h-5 rounded-full"
+                          style={{ backgroundImage: `url(${color.media_url})` }}
+                        ></div>
+                      ) : (
+                        <>
+                          <div
+                            className="w-3 h-3 rounded-full"
+                            style={{ backgroundColor: `${color.hex_code}` }}
+                          />
+                          {color.hex_code}
+                        </>
+                      )}
                     </Kbd>
                   </Table.Cell>
                   <Table.Cell className="text-right">
