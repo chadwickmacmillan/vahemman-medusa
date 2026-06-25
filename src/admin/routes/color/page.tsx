@@ -461,22 +461,20 @@ const ColorPage = () => {
                 <Table.Row key={color.id}>
                   <Table.Cell>{color.name}</Table.Cell>
                   <Table.Cell>
-                    <Kbd className="flex flex-row gap-1 items-center font-mono">
-                      {color.media_url ? (
+                    {color.media_url ? (
+                      <div
+                        className="w-6 h-6 rounded-full"
+                        style={{ backgroundImage: `url(${color.media_url})` }}
+                      ></div>
+                    ) : (
+                      <Kbd className="flex flex-row gap-1 items-center font-mono">
                         <div
-                          className="w-5 h-5 rounded-full"
-                          style={{ backgroundImage: `url(${color.media_url})` }}
-                        ></div>
-                      ) : (
-                        <>
-                          <div
-                            className="w-3 h-3 rounded-full"
-                            style={{ backgroundColor: `${color.hex_code}` }}
-                          />
-                          {color.hex_code}
-                        </>
-                      )}
-                    </Kbd>
+                          className="w-3 h-3 rounded-full"
+                          style={{ backgroundColor: `${color.hex_code}` }}
+                        />
+                        {color.hex_code}
+                      </Kbd>
+                    )}
                   </Table.Cell>
                   <Table.Cell className="text-right">
                     <DropdownMenu>
