@@ -463,7 +463,7 @@ const ColorPage = () => {
                   <Table.Cell>
                     {color.media_url ? (
                       <div
-                        className="w-6 h-6 rounded-full"
+                        className="w-6 h-6 rounded-full border-ui-tag-neutral-border"
                         style={{ backgroundImage: `url(${color.media_url})` }}
                       ></div>
                     ) : (
