@@ -464,7 +464,11 @@ const ColorPage = () => {
                     {color.media_url ? (
                       <div
                         className="w-6 h-6 rounded-full border-ui-tag-neutral-border"
-                        style={{ backgroundImage: `url(${color.media_url})` }}
+                        style={{
+                          backgroundImage: `url(${color.media_url})`,
+                          backgroundPosition: "center",
+                          backgroundSize: "cover",
+                        }}
                       ></div>
                     ) : (
                       <Kbd className="flex flex-row gap-1 items-center font-mono">
