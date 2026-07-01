@@ -146,3 +146,23 @@ export const useProductColors = (id: string) => {
     },
   });
 };
+
+export type OptionColor = {
+  id: string;
+  name: string;
+  hex_code: string | null;
+  media: string | null;
+  media_url?: string;
+  deleted_at?: string | null;
+};
+
+export const useProductOptionColors = (id: string) => {
+  return useQuery({
+    queryKey: [`product_option_${id}`, `color`],
+    queryFn: async ({ signal }) =>
+      await sdk.client.fetch<{ colors: OptionColor[]; missing_colors: string[] }>(
+        `/admin/product-option/${id}/color`,
+        { signal },
+      ),
+  });
+};
