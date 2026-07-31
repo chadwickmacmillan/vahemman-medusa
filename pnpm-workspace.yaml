@@ -1,0 +1,18 @@
+minimumReleaseAgeExclude:
+  - "@medusajs/*"
+publicHoistPattern:
+  - "*@medusajs/*"
+  - "@tanstack/react-query"
+  - "react-i18next"
+  - "react-router-dom"
+
+networkConcurrency: 6
+fetchRetries: 5
+fetchRetryMaxtimeout: 120000
+allowBuilds:
+  '@medusajs/telemetry': true
+  '@swc/core': true
+  esbuild: true
+  msgpackr-extract: true
+  protobufjs: true
+  unrs-resolver: true
