@@ -44,13 +44,17 @@ class SanityModuleService {
       _type: this.typeMap[SyncDocumentTypes.PRODUCT],
       _id: product.id,
       title: product.title,
+      ...(product.thumbnail ? { thumbnail: product.thumbnail } : {}),
     };
   };
   private transformProductForUpdate = (product: ProductDTO) => {
     return {
       set: {
         title: product.title,
+        ...(product.thumbnail ? { thumbnail: product.thumbnail } : {}),
       },
+      // clear the field when the product no longer has a thumbnail
+      unset: product.thumbnail ? [] : ["thumbnail"],
     };
   };
 
