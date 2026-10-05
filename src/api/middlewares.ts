@@ -3,6 +3,7 @@ import { authenticate, defineMiddlewares } from "@medusajs/medusa";
 import { adminProductOptionSortMiddlewares } from "./admin/middlewares";
 import { AssignTaxCodeValidator } from "./admin/validators";
 import { storeCartRoutesMiddlewares } from "./store/carts/middlewares";
+import { storePromotionalPricesRoutesMiddlewares } from "./store/promotional-prices/middlewares";
 
 export default defineMiddlewares({
   routes: [
@@ -17,5 +18,6 @@ export default defineMiddlewares({
     },
     ...adminProductOptionSortMiddlewares,
     ...storeCartRoutesMiddlewares,
+    ...storePromotionalPricesRoutesMiddlewares,
   ],
 });
